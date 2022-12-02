@@ -8,13 +8,34 @@
     ".NETCoreApp,Version=v6.0": {
       "SistemaOrdenDeCompra.Infraestructura/1.0.0": {
         "dependencies": {
+          "Dapper": "2.0.123",
           "SistemaOrdenDeCompra.Core": "1.0.0"
         },
         "runtime": {
           "SistemaOrdenDeCompra.Infraestructura.dll": {}
         }
       },
+      "Dapper/2.0.123": {
+        "runtime": {
+          "lib/net5.0/Dapper.dll": {
+            "assemblyVersion": "2.0.0.0",
+            "fileVersion": "2.0.123.33578"
+          }
+        }
+      },
+      "Newtonsoft.Json/13.0.2": {
+        "runtime": {
+          "lib/net6.0/Newtonsoft.Json.dll": {
+            "assemblyVersion": "13.0.0.0",
+            "fileVersion": "13.0.2.27524"
+          }
+        }
+      },
       "SistemaOrdenDeCompra.Core/1.0.0": {
+        "dependencies": {
+          "Dapper": "2.0.123",
+          "Newtonsoft.Json": "13.0.2"
+        },
         "runtime": {
           "SistemaOrdenDeCompra.Core.dll": {}
         }
@@ -26,6 +47,20 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "Dapper/2.0.123": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-RDFF4rBLLmbpi6pwkY7q/M6UXHRJEOerplDGE5jwEkP/JGJnBauAClYavNKJPW1yOTWRPIyfj4is3EaJxQXILQ==",
+      "path": "dapper/2.0.123",
+      "hashPath": "dapper.2.0.123.nupkg.sha512"
+    },
+    "Newtonsoft.Json/13.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-R2pZ3B0UjeyHShm9vG+Tu0EBb2lC8b0dFzV9gVn50ofHXh9Smjk6kTn7A/FdAsC8B5cKib1OnGYOXxRBz5XQDg==",
+      "path": "newtonsoft.json/13.0.2",
+      "hashPath": "newtonsoft.json.13.0.2.nupkg.sha512"
     },
     "SistemaOrdenDeCompra.Core/1.0.0": {
       "type": "project",

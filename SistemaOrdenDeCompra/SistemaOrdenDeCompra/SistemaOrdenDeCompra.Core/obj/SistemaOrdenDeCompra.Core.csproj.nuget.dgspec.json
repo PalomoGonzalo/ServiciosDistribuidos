@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\ServiciosDistribuidos\\SistemaOrdenDeCompra\\SistemaOrdenDeCompra\\SistemaOrdenDeCompra.Core\\SistemaOrdenDeCompra.Core.csproj": {}
+    "C:\\SistemaDistribucion\\ServiciosDistribuidos\\SistemaOrdenDeCompra\\SistemaOrdenDeCompra\\SistemaOrdenDeCompra.Core\\SistemaOrdenDeCompra.Core.csproj": {}
   },
   "projects": {
-    "C:\\ServiciosDistribuidos\\SistemaOrdenDeCompra\\SistemaOrdenDeCompra\\SistemaOrdenDeCompra.Core\\SistemaOrdenDeCompra.Core.csproj": {
+    "C:\\SistemaDistribucion\\ServiciosDistribuidos\\SistemaOrdenDeCompra\\SistemaOrdenDeCompra\\SistemaOrdenDeCompra.Core\\SistemaOrdenDeCompra.Core.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\ServiciosDistribuidos\\SistemaOrdenDeCompra\\SistemaOrdenDeCompra\\SistemaOrdenDeCompra.Core\\SistemaOrdenDeCompra.Core.csproj",
+        "projectUniqueName": "C:\\SistemaDistribucion\\ServiciosDistribuidos\\SistemaOrdenDeCompra\\SistemaOrdenDeCompra\\SistemaOrdenDeCompra.Core\\SistemaOrdenDeCompra.Core.csproj",
         "projectName": "SistemaOrdenDeCompra.Core",
-        "projectPath": "C:\\ServiciosDistribuidos\\SistemaOrdenDeCompra\\SistemaOrdenDeCompra\\SistemaOrdenDeCompra.Core\\SistemaOrdenDeCompra.Core.csproj",
-        "packagesPath": "C:\\Users\\153131\\.nuget\\packages\\",
-        "outputPath": "C:\\ServiciosDistribuidos\\SistemaOrdenDeCompra\\SistemaOrdenDeCompra\\SistemaOrdenDeCompra.Core\\obj\\",
+        "projectPath": "C:\\SistemaDistribucion\\ServiciosDistribuidos\\SistemaOrdenDeCompra\\SistemaOrdenDeCompra\\SistemaOrdenDeCompra.Core\\SistemaOrdenDeCompra.Core.csproj",
+        "packagesPath": "C:\\Users\\mati_\\.nuget\\packages\\",
+        "outputPath": "C:\\SistemaDistribucion\\ServiciosDistribuidos\\SistemaOrdenDeCompra\\SistemaOrdenDeCompra\\SistemaOrdenDeCompra.Core\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\153131\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\mati_\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -39,6 +43,16 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
+          "dependencies": {
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.0.123, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.2, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -54,7 +68,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.301\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
         }
       }
     }

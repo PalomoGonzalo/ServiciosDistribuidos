@@ -1,8 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "aYLFu79OJqCoFjyqlv6jwngAKruPcrRHgAiX5gsVMidXbvr+XwtI0apZObNcRHTpl7bUYw1sJkyTBUg1edFEyg==",
+  "dgSpecHash": "pIyJGB1WYeaQZFiG6VUEsA/iYO6pPVwlx5NeaeaEsdRYcQMgNHjJyCb8yUHsUxmDtU4JQ7v/HJX7QG9pxBHQcA==",
   "success": true,
-  "projectFilePath": "C:\\ServiciosDistribuidos\\SistemaOrdenDeCompra\\SistemaOrdenDeCompra\\SistemaOrdenDeCompra.Infraestructura\\SistemaOrdenDeCompra.Infraestructura.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "C:\\SistemaDistribucion\\ServiciosDistribuidos\\SistemaOrdenDeCompra\\SistemaOrdenDeCompra\\SistemaOrdenDeCompra.Infraestructura\\SistemaOrdenDeCompra.Infraestructura.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\mati_\\.nuget\\packages\\dapper\\2.0.123\\dapper.2.0.123.nupkg.sha512",
+    "C:\\Users\\mati_\\.nuget\\packages\\newtonsoft.json\\13.0.2\\newtonsoft.json.13.0.2.nupkg.sha512"
+  ],
   "logs": []
 }
