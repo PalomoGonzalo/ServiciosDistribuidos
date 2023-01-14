@@ -1,0 +1,142 @@
+using System.Data;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Dapper;
+using Microsoft.IdentityModel.Tokens;
+using MySql.Data.MySqlClient;
+using UserManager.DTO;
+
+namespace UserManager.Repositorios
+{
+
+    public interface ILogin
+    {
+        public Task<string> Loguear(LoginDTO user);
+        public Task<CrearUsuarioDTO> CrearUsuarioSeguridad(CrearUsuarioDTO user);
+        public Task<LoginDTO> ObtenerUsuarioLogin(string user);
+        public Task<UsuarioDTO> ObtenerUsuarioPorLegajo(int legajo);
+
+
+    }
+
+    public class Login : ILogin
+    {
+
+        private readonly IConfiguration _config;
+
+        private readonly IPasswordHasherRepositorio _passwordHash;
+
+        public Login(IConfiguration config, IPasswordHasherRepositorio passwordHash)
+        {
+            _config = config;
+            _passwordHash = passwordHash;
+        }
+
+        /// <summary>
+        /// Se obtiene el usuario y contraseña, checkea el hash 
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns>el toke  o null</returns>
+        public async Task<string> Loguear(LoginDTO user)
+        {
+            LoginDTO loginUser = await ObtenerUsuarioLogin(user.Usuario);
+
+            if (loginUser == null)
+            {
+                return null;
+            }
+
+            if (!(_passwordHash.CheckHash(loginUser.Contraseña, user.Contraseña)))
+            {
+                return null;
+            }
+
+            string token = GenerarToken(loginUser);
+            return token;
+        }
+        /// <summary>
+        /// Genera token jwt que expira en una hora
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public String GenerarToken(LoginDTO user)
+        {
+            JwtSecurityTokenHandler tokenhandler = new JwtSecurityTokenHandler();
+
+            SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[] { new Claim("USUARIO", user.Usuario) }),
+                Expires = DateTime.UtcNow.AddHours(1),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Authentication:SecretKey"])), SecurityAlgorithms.HmacSha256)
+            };
+
+            SecurityToken token = tokenhandler.CreateToken(tokenDescriptor);
+            String encodeJwt = tokenhandler.WriteToken(token);
+
+            return encodeJwt;
+        }
+        /// <summary>
+        /// Crea un usuario y contraseña en la tabla t_usuario_login
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public async Task<CrearUsuarioDTO> CrearUsuarioSeguridad(CrearUsuarioDTO user)
+        {
+            if (user == null)
+                throw new ArgumentNullException();
+
+            var passHash = _passwordHash.Hash(user.Contraseña);
+
+            using IDbConnection db = new MySqlConnection(_config.GetConnectionString("DefaultConnection"));
+
+            string sql = @"INSERT INTO T_USUARIO_LOGIN (USUARIO,NOMBRE,CONTRASEÑA) VALUES (@usuario,@nombre,@contraseña)";
+
+            DynamicParameters dp = new DynamicParameters();
+            dp.Add("usuario", user.Usuario, DbType.String);
+            dp.Add("nombre", user.Nombre, DbType.String);
+            dp.Add("contraseña", passHash, DbType.String);
+
+            int row = await db.ExecuteAsync(sql, dp);
+
+            if (row == 0)
+            {
+                throw new Exception("No se logro crear correctamente el usuario");
+            }
+            return user;
+        }
+        /// <summary>
+        /// Obtiene Un usuario Por el nombre del usuario
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public async Task<LoginDTO> ObtenerUsuarioLogin(string user)
+        {
+            using IDbConnection db = new MySqlConnection(_config.GetConnectionString("DefaultConnection"));
+
+            string query = $@"SELECT * FROM T_USUARIO_LOGIN WHERE USUARIO=@user";
+
+            DynamicParameters dp = new DynamicParameters();
+            dp.Add("user", user, DbType.String);
+
+            return await db.QueryFirstOrDefaultAsync<LoginDTO>(query, dp);
+        }
+        /// <summary>
+        /// Se obtiene usuario por legajo
+        /// </summary>
+        /// <param name="legajo"> numero de legajo</param>
+        /// <returns></returns>
+        public async Task<UsuarioDTO> ObtenerUsuarioPorLegajo(int legajo)
+        {
+            using IDbConnection db = new MySqlConnection(_config.GetConnectionString("DefaultConnection"));
+
+            string query = $@"SELECT * FROM T_USUARIO_LOGIN WHERE LEGAJO=@user";
+
+            DynamicParameters dp = new DynamicParameters();
+            dp.Add("user", legajo, DbType.Int64);
+
+            return await db.QueryFirstOrDefaultAsync<UsuarioDTO>(query, dp);
+        }
+
+    }
+}
