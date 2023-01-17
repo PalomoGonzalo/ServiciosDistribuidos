@@ -15,7 +15,7 @@ namespace UserManager.Repositorios
         public Task<string> Loguear(LoginDTO user);
         public Task<CrearUsuarioDTO> CrearUsuarioSeguridad(CrearUsuarioDTO user);
         public Task<LoginDTO> ObtenerUsuarioLogin(string user);
-        public Task<UsuarioDTO> ObtenerUsuarioPorLegajo(int legajo);
+
 
 
     }
@@ -121,22 +121,7 @@ namespace UserManager.Repositorios
 
             return await db.QueryFirstOrDefaultAsync<LoginDTO>(query, dp);
         }
-        /// <summary>
-        /// Se obtiene usuario por legajo
-        /// </summary>
-        /// <param name="legajo"> numero de legajo</param>
-        /// <returns></returns>
-        public async Task<UsuarioDTO> ObtenerUsuarioPorLegajo(int legajo)
-        {
-            using IDbConnection db = new MySqlConnection(_config.GetConnectionString("DefaultConnection"));
 
-            string query = $@"SELECT * FROM T_USUARIO_LOGIN WHERE LEGAJO=@user";
-
-            DynamicParameters dp = new DynamicParameters();
-            dp.Add("user", legajo, DbType.Int64);
-
-            return await db.QueryFirstOrDefaultAsync<UsuarioDTO>(query, dp);
-        }
 
     }
 }

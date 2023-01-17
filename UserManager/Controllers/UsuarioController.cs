@@ -10,25 +10,52 @@ namespace UserManager.Controllers
     [Route("api/[controller]")]
     public class UsuarioController : ControllerBase
     {
-        private readonly ILogin _login;
+        private readonly IUsuario _usuario;
 
-        public UsuarioController(ILogin login)
+        public UsuarioController(IUsuario user)
         {
-            _login = login;
+            _usuario = user;
         }
 
 
-        [Authorize]
+        
         [HttpGet("ObtenerUsuarioPorLegajo/{legajo}")]
         public async Task<IActionResult> ObtenerUsuarioPorLegajo(int legajo)
         {
-            UsuarioDTO listUsuario = await _login.ObtenerUsuarioPorLegajo(legajo);
-            if (listUsuario == null)
+            UsuarioDTO usuario = await _usuario.ObtenerUsuarioPorLegajo(legajo);
+            if (usuario == null)
             {
                 return NotFound("no existe el usuario");
             }
-            return Ok(listUsuario);
+            return Ok(usuario);
         }
+
+        
+        [HttpGet("ObtenerUsuarioPorDni/{dni}")]
+        public async Task<IActionResult> ObtenerUsuarioPorDni(int dni)
+        {
+            UsuarioDTO usuario = await _usuario.ObtenerUsuarioPorDni(dni);
+            if (usuario == null)
+            {
+                return NotFound("no existe el usuario");
+            }
+            return Ok(usuario);
+        }
+        
+        
+        [HttpGet("ObtenerTodosLosUsuarios/")]
+        public async Task<IActionResult> ObtenerTodosLosUsuarios()
+        {
+            IEnumerable<UsuarioDTO> usuario = await _usuario.ObtenerTodosLosUsuarios();
+            if (usuario == null)
+            {
+                return NotFound("ERROR EN TRAER A LOS USUARIOS");
+            }
+            return Ok(usuario);
+        }
+
+
+
 
 
 
