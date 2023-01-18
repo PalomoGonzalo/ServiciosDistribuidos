@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "DlEWgpCHBZMhmNIfiATjug3xyYtqgal3uHD03zXic0k+PMOwueOU26go0yYnIBEOG12N6y20LGbMZ04AsTXUqA==",
+  "dgSpecHash": "tpV7XKSVtTeB7pM72tAEfg6k8XqW4aq+h0smJpu6PCjptscYVodM8mxN8HO2dK8pLV22q2dxCdhmKMN+hTQm3Q==",
   "success": true,
-  "projectFilePath": "C:\\ServiciosDistribuidos\\ServiciosDistribuidos\\UserManager\\UserManager.csproj",
+  "projectFilePath": "c:\\ServiciosDistribuidos\\ServiciosDistribuidos\\UserManager\\UserManager.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\153131\\.nuget\\packages\\dapper\\2.0.123\\dapper.2.0.123.nupkg.sha512",
     "C:\\Users\\153131\\.nuget\\packages\\google.protobuf\\3.19.4\\google.protobuf.3.19.4.nupkg.sha512",

@@ -2,6 +2,7 @@ using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Web;
 using Dapper;
 using Microsoft.IdentityModel.Tokens;
 using MySql.Data.MySqlClient;
@@ -15,8 +16,7 @@ namespace UserManager.Repositorios
         public Task<string> Loguear(LoginDTO user);
         public Task<CrearUsuarioDTO> CrearUsuarioSeguridad(CrearUsuarioDTO user);
         public Task<LoginDTO> ObtenerUsuarioLogin(string user);
-
-
+        
 
     }
 
@@ -66,7 +66,7 @@ namespace UserManager.Repositorios
 
             SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] { new Claim("USUARIO", user.Usuario) }),
+                Subject = new ClaimsIdentity(new[] { new Claim("USUARIO", user.Usuario),new Claim("LEGAJO", user.Contraseña) }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Authentication:SecretKey"])), SecurityAlgorithms.HmacSha256)
             };
@@ -123,5 +123,18 @@ namespace UserManager.Repositorios
         }
 
 
+/*        public string ObtenerTokenHeaders()
+        {
+            string test = null;
+            foreach(var header in Request)
+            {
+                if(header.Key == "Authorization")
+                {
+                    test = header.Value;
+                }
+            }
+        }
+
+*/
     }
 }

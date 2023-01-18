@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\ServiciosDistribuidos\\ServiciosDistribuidos\\UserManager\\UserManager.csproj": {}
+    "c:\\ServiciosDistribuidos\\ServiciosDistribuidos\\UserManager\\UserManager.csproj": {}
   },
   "projects": {
-    "C:\\ServiciosDistribuidos\\ServiciosDistribuidos\\UserManager\\UserManager.csproj": {
+    "c:\\ServiciosDistribuidos\\ServiciosDistribuidos\\UserManager\\UserManager.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\ServiciosDistribuidos\\ServiciosDistribuidos\\UserManager\\UserManager.csproj",
+        "projectUniqueName": "c:\\ServiciosDistribuidos\\ServiciosDistribuidos\\UserManager\\UserManager.csproj",
         "projectName": "UserManager",
-        "projectPath": "C:\\ServiciosDistribuidos\\ServiciosDistribuidos\\UserManager\\UserManager.csproj",
+        "projectPath": "c:\\ServiciosDistribuidos\\ServiciosDistribuidos\\UserManager\\UserManager.csproj",
         "packagesPath": "C:\\Users\\153131\\.nuget\\packages\\",
-        "outputPath": "C:\\ServiciosDistribuidos\\ServiciosDistribuidos\\UserManager\\obj\\",
+        "outputPath": "c:\\ServiciosDistribuidos\\ServiciosDistribuidos\\UserManager\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\153131\\AppData\\Roaming\\NuGet\\NuGet.Config",
