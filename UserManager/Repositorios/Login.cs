@@ -123,18 +123,5 @@ namespace UserManager.Repositorios
         }
 
 
-/*        public string ObtenerTokenHeaders()
-        {
-            string test = null;
-            foreach(var header in Request)
-            {
-                if(header.Key == "Authorization")
-                {
-                    test = header.Value;
-                }
-            }
-        }
-
-*/
     }
 }
