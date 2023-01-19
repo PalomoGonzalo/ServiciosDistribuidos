@@ -14,10 +14,12 @@ namespace UserManager.Controllers
     public class LoginController : ControllerBase
     {
         private readonly ILogin _login;
+        private readonly IUsuario _usuario;
 
-        public LoginController(ILogin login)
+        public LoginController(ILogin login, IUsuario usuario = null)
         {
             _login = login;
+            _usuario = usuario;
         }
 
         /// <summary>
@@ -50,8 +52,8 @@ namespace UserManager.Controllers
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        [HttpPost("CrearContraseña")]
-        public async Task<IActionResult> CrearUsuario([FromBody] CrearUsuarioDTO user)
+        [HttpPost("RegistrarUsuario")]
+        public async Task<IActionResult> RegistrarUsuario([FromBody] CrearUsuarioDTO user)
         {
             LoginDTO usuarioExiste = await _login.ObtenerUsuarioLogin(user.Usuario);
 
@@ -60,6 +62,11 @@ namespace UserManager.Controllers
                 return BadRequest($"El usario {user.Usuario} ya existe");
             }
             CrearUsuarioDTO usuarioCreado = await _login.CrearUsuarioSeguridad(user);
+
+            if(usuarioCreado!=null)
+            {
+              await  _usuario.InsertarRegistrarseEnUsuario(usuarioCreado);
+            }
 
             return Ok($"se creo correctamente el usuario {usuarioCreado.Nombre} {usuarioCreado.Usuario}");
         }
@@ -95,6 +102,8 @@ namespace UserManager.Controllers
             };
             return  Ok(user);
         } 
+
+
 
     }
 }

@@ -55,5 +55,7 @@ namespace UserManager.Controllers
             }
             return Ok(usuario);
         }
+
+        
     }
 }

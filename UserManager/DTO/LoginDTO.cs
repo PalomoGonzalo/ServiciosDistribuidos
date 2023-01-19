@@ -4,5 +4,6 @@ namespace UserManager.DTO
     {
         public string Usuario { get; set; }
         public string Contraseña { get; set; }
+        public int Legajo { get; set; }
     }
 }

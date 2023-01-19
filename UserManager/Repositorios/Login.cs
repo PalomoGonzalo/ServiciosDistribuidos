@@ -16,15 +16,11 @@ namespace UserManager.Repositorios
         public Task<string> Loguear(LoginDTO user);
         public Task<CrearUsuarioDTO> CrearUsuarioSeguridad(CrearUsuarioDTO user);
         public Task<LoginDTO> ObtenerUsuarioLogin(string user);
-        
-
     }
 
     public class Login : ILogin
     {
-
         private readonly IConfiguration _config;
-
         private readonly IPasswordHasherRepositorio _passwordHash;
 
         public Login(IConfiguration config, IPasswordHasherRepositorio passwordHash)
@@ -90,12 +86,15 @@ namespace UserManager.Repositorios
 
             using IDbConnection db = new MySqlConnection(_config.GetConnectionString("DefaultConnection"));
 
-            string sql = @"INSERT INTO T_USUARIO_LOGIN (USUARIO,NOMBRE,CONTRASEÑA) VALUES (@usuario,@nombre,@contraseña)";
+            string sql = @"INSERT INTO T_USUARIO_LOGIN (USUARIO,NOMBRE,CONTRASEÑA,MAIL,ACTIVO) VALUES (@usuario,@nombre,@contraseña,@mail,@activo)";
 
             DynamicParameters dp = new DynamicParameters();
             dp.Add("usuario", user.Usuario, DbType.String);
             dp.Add("nombre", user.Nombre, DbType.String);
             dp.Add("contraseña", passHash, DbType.String);
+            dp.Add("mail",user.Mail,DbType.String);
+            dp.Add("activo",1,DbType.Int16);
+
 
             int row = await db.ExecuteAsync(sql, dp);
 

@@ -47,6 +47,20 @@ builder.Services.AddSwaggerGen(c =>
 
 });
 
+builder.Services.AddCors(x => x.AddPolicy("EnableCors", builder =>
+{
+    builder.SetIsOriginAllowedToAllowWildcardSubdomains()
+            .AllowAnyOrigin()
+            //.WithOrigins("https://codestack.com")
+            .AllowAnyMethod()
+            //.WithMethods("PATCH", "DELETE", "GET", "HEADER")
+            .AllowAnyHeader();
+    //.WithHeaders("X-Token", "content-type")
+}));
+
+
+
+
 var pass= builder.Configuration["Authentication:SecretKey"];
 
 
@@ -89,6 +103,7 @@ app.UseHttpsRedirection();
 
 app.UseAuthentication();
 
+app.UseCors("EnableCors");
 
 app.UseAuthorization();
 
