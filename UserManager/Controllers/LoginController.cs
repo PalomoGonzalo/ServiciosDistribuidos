@@ -76,7 +76,7 @@ namespace UserManager.Controllers
         }
 
         [HttpGet("Header")]
-        public async Task<IActionResult> GetHeaders()
+        public IActionResult GetHeaders()
         {
             string test = Request.Headers.Authorization;
             string  []strlist = test.Split("Bearer ",StringSplitOptions.RemoveEmptyEntries);
