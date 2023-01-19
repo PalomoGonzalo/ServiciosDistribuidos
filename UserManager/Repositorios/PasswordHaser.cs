@@ -10,7 +10,7 @@ namespace UserManager.Repositorios
          bool CheckHash(string hash, string password);
     }
 
-       public class PasswordHaserRepositorio : IPasswordHasherRepositorio
+    public class PasswordHaserRepositorio : IPasswordHasherRepositorio
     {
         private readonly PassOptions _config;
         public PasswordHaserRepositorio(IOptions<PassOptions> config)
@@ -27,7 +27,6 @@ namespace UserManager.Repositorios
         /// <returns></returns>
         public bool CheckHash(string hash, string password)
         {
-
             if (String.IsNullOrEmpty(password))
                 throw new ArgumentException(nameof(password));
 
@@ -55,10 +54,7 @@ namespace UserManager.Repositorios
                 return keyToCheck.SequenceEqual(key);
             }
 
-
         }
-
-
         /// <summary>
         /// Se crea el hash con los parametros definidos en el appsettings
         /// </summary>

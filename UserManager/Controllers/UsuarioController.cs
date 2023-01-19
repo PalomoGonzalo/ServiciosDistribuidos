@@ -20,6 +20,7 @@ namespace UserManager.Controllers
 
         
         [HttpGet("ObtenerUsuarioPorLegajo/{legajo}")]
+        [Authorize]
         public async Task<IActionResult> ObtenerUsuarioPorLegajo(int legajo)
         {
             UsuarioDTO usuario = await _usuario.ObtenerUsuarioPorLegajo(legajo);
@@ -32,6 +33,7 @@ namespace UserManager.Controllers
 
         
         [HttpGet("ObtenerUsuarioPorDni/{dni}")]
+        [Authorize]
         public async Task<IActionResult> ObtenerUsuarioPorDni(int dni)
         {
             UsuarioDTO usuario = await _usuario.ObtenerUsuarioPorDni(dni);
@@ -53,11 +55,5 @@ namespace UserManager.Controllers
             }
             return Ok(usuario);
         }
-
-
-
-
-
-
     }
 }

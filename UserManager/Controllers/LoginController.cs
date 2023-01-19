@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using UserManager.DTO;
 using UserManager.Repositorios;
+using Microsoft.AspNetCore.Authorization;
 
 namespace UserManager.Controllers
 {
@@ -64,6 +65,7 @@ namespace UserManager.Controllers
         }
 
         [HttpGet("Headers")]
+        [Authorize]
         public ActionResult<Dictionary<string, string>> GetAllHeaders()
         {
             Dictionary<string, string> requestHeaders =
@@ -76,6 +78,7 @@ namespace UserManager.Controllers
         }
 
         [HttpGet("Header")]
+        [Authorize]
         public IActionResult GetHeaders()
         {
             string test = Request.Headers.Authorization;
