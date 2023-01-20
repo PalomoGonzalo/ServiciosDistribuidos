@@ -1,3 +1,4 @@
+using System.Data.Common;
 using System.Data;
 using Dapper;
 using MySql.Data.MySqlClient;
@@ -11,7 +12,8 @@ namespace UserManager.Repositorios
         public Task<UsuarioDTO> ObtenerUsuarioPorLegajo(int legajo);
         public Task<IEnumerable<UsuarioDTO>> ObtenerTodosLosUsuarios();
         public Task<UsuarioDTO> ObtenerUsuarioPorDni(int dni);
-        public Task InsertarRegistrarseEnUsuario(CrearUsuarioDTO login);
+        public Task<int> InsertarRegistrarseEnUsuario(CrearUsuarioDTO login,IDbConnection db);
+        public Task <CrearUsuarioDTO>RegistrarUsuario(CrearUsuarioDTO user);
     }
 
     public class Usuario : IUsuario
@@ -71,27 +73,70 @@ namespace UserManager.Repositorios
             return listaUsuario;
         }
 
-
-        public async Task InsertarRegistrarseEnUsuario(CrearUsuarioDTO login)
+        /// <summary>
+        /// Inserta en la taba t_usuario al registrar cono los datos obtenidos de la tabla t_usuario_login
+        /// </summary>
+        /// <param name="login"></param>
+        /// <param name="db"></param>
+        /// <returns></returns>
+        public async Task <int>InsertarRegistrarseEnUsuario(CrearUsuarioDTO login, IDbConnection db)
         {
-            LoginDTO legajo =  await _login.ObtenerUsuarioLogin(login.Usuario);
-
-            using IDbConnection db = new MySqlConnection(_config.GetConnectionString("DefaultConnection"));
+            LoginDTO legajo = await _login.ObtenerUsuarioLogin(login.Usuario,db);
 
             string query = $@"INSERT INTO T_USUARIO (LEGAJO,NOMBRE,MAIL,ROL,ACTIVO) VALUES (@legajo, @nombre, @mail, @rol,@activo)";
 
             DynamicParameters dp = new DynamicParameters();
-            dp.Add("legajo",legajo.Legajo,DbType.Int32);
-            dp.Add("nombre",login.Nombre,DbType.String);
-            dp.Add("mail",login.Mail,DbType.String);
-            dp.Add("rol",1, DbType.Int16);
-            dp.Add("activo",1,DbType.Int16);
+            dp.Add("legajo", legajo.Legajo, DbType.Int32);
+            dp.Add("nombre", login.Nombre, DbType.String);
+            dp.Add("mail", login.Mail, DbType.String);
+            dp.Add("rol", 1, DbType.Int16);
+            dp.Add("activo", 1, DbType.Int16);
 
             int row = await db.ExecuteAsync(query, dp);
             if (row == 0)
             {
                 throw new Exception("No se logro crear correctamente el usuario");
             }
+            return row;
+
+        }
+
+        /// <summary>
+        /// Registra un usuario, como se hace parcialemente primero se controla que no que el usuario exista,
+        /// se guarda los datos en t_usuario_login y por ultimo guarda en la tabla t_usuario
+        /// En caso de tener algun tipo de error se realiza un rollback
+        /// Si sale todo bien se realiza el comit
+        /// /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public async Task <CrearUsuarioDTO>RegistrarUsuario(CrearUsuarioDTO user)
+        {
+            int row = 0;
+            using IDbConnection db = new MySqlConnection(_config.GetConnectionString("DefaultConnection"));
+            if (db.State is ConnectionState.Closed) db.Open();
+
+            using IDbTransaction transaccion = db.BeginTransaction();
+
+            LoginDTO usuarioExiste = await _login.ObtenerUsuarioLogin(user.Usuario, db);
+
+            if (usuarioExiste != null)
+            {
+                throw new Exception($"El usario {user.Usuario} ya existe");
+            }
+            CrearUsuarioDTO usuarioCreado = await _login.CrearUsuarioSeguridad(user,db);
+
+            if (usuarioCreado == null)
+            {
+                throw new Exception ($"Error al crear el usuario");
+            }
+
+            row = await this.InsertarRegistrarseEnUsuario(usuarioCreado,db);
+            if(row==0)
+            {
+                transaccion.Rollback();
+            }
+            transaccion.Commit();
+            return usuarioCreado;
 
         }
     }

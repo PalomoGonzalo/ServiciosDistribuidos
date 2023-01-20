@@ -14,8 +14,9 @@ namespace UserManager.Repositorios
     public interface ILogin
     {
         public Task<string> Loguear(LoginDTO user);
-        public Task<CrearUsuarioDTO> CrearUsuarioSeguridad(CrearUsuarioDTO user);
-        public Task<LoginDTO> ObtenerUsuarioLogin(string user);
+        public Task<CrearUsuarioDTO> CrearUsuarioSeguridad(CrearUsuarioDTO user,IDbConnection db);
+        public Task<LoginDTO> ObtenerUsuarioLogin(string user, IDbConnection db);
+        public Task<LoginDTO> ObtenerUsuarioLoginDB(string user);
     }
 
     public class Login : ILogin
@@ -36,7 +37,7 @@ namespace UserManager.Repositorios
         /// <returns>el toke  o null</returns>
         public async Task<string> Loguear(LoginDTO user)
         {
-            LoginDTO loginUser = await ObtenerUsuarioLogin(user.Usuario);
+            LoginDTO loginUser = await ObtenerUsuarioLoginDB(user.Usuario);
 
             if (loginUser == null)
             {
@@ -77,14 +78,12 @@ namespace UserManager.Repositorios
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        public async Task<CrearUsuarioDTO> CrearUsuarioSeguridad(CrearUsuarioDTO user)
+        public async Task<CrearUsuarioDTO> CrearUsuarioSeguridad(CrearUsuarioDTO user, IDbConnection db)
         {
             if (user == null)
                 throw new ArgumentNullException();
 
             var passHash = _passwordHash.Hash(user.Contraseña);
-
-            using IDbConnection db = new MySqlConnection(_config.GetConnectionString("DefaultConnection"));
 
             string sql = @"INSERT INTO T_USUARIO_LOGIN (USUARIO,NOMBRE,CONTRASEÑA,MAIL,ACTIVO) VALUES (@usuario,@nombre,@contraseña,@mail,@activo)";
 
@@ -105,14 +104,12 @@ namespace UserManager.Repositorios
             return user;
         }
         /// <summary>
-        /// Obtiene Un usuario Por el nombre del usuario
+        /// Obtiene Un usuario Por el nombre del usuario, en una instancia de db ya creada
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        public async Task<LoginDTO> ObtenerUsuarioLogin(string user)
+        public async Task<LoginDTO> ObtenerUsuarioLogin(string user, IDbConnection db)
         {
-            using IDbConnection db = new MySqlConnection(_config.GetConnectionString("DefaultConnection"));
-
             string query = $@"SELECT * FROM T_USUARIO_LOGIN WHERE USUARIO=@user";
 
             DynamicParameters dp = new DynamicParameters();
@@ -120,7 +117,20 @@ namespace UserManager.Repositorios
 
             return await db.QueryFirstOrDefaultAsync<LoginDTO>(query, dp);
         }
+        /// <summary>
+        /// Obtiene Un usuario Por el nombre del usuario creando una instancia a la bd
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public async Task<LoginDTO> ObtenerUsuarioLoginDB(string user)
+        {
+            using IDbConnection db = new MySqlConnection(_config.GetConnectionString("DefaultConnection"));
+            string query = $@"SELECT * FROM T_USUARIO_LOGIN WHERE USUARIO=@user";
 
+            DynamicParameters dp = new DynamicParameters();
+            dp.Add("user", user, DbType.String);
 
+            return await db.QueryFirstOrDefaultAsync<LoginDTO>(query, dp);
+        }
     }
 }

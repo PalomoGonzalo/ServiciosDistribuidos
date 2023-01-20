@@ -28,8 +28,8 @@ namespace UserManager.Controllers
         /// <param name="user"></param>
         /// <returns></returns>
 
-        [HttpPost("Login")]
-        public async Task<IActionResult> Login([FromBody] LoginDTO user)
+        [HttpPost("Loguear")]
+        public async Task<IActionResult> Loguear([FromBody] LoginDTO user)
         {
             //JwtSecurityTokenHandler tokenhandler = new JwtSecurityTokenHandler();
             if (user == null)
@@ -55,22 +55,16 @@ namespace UserManager.Controllers
         [HttpPost("RegistrarUsuario")]
         public async Task<IActionResult> RegistrarUsuario([FromBody] CrearUsuarioDTO user)
         {
-            LoginDTO usuarioExiste = await _login.ObtenerUsuarioLogin(user.Usuario);
+            CrearUsuarioDTO usuario =await _usuario.RegistrarUsuario(user);
 
-            if (usuarioExiste != null)
+            if(usuario==null)
             {
-                return BadRequest($"El usario {user.Usuario} ya existe");
-            }
-            CrearUsuarioDTO usuarioCreado = await _login.CrearUsuarioSeguridad(user);
-
-            if(usuarioCreado!=null)
-            {
-              await  _usuario.InsertarRegistrarseEnUsuario(usuarioCreado);
+                return NotFound("Error al crearse el usuario");
             }
 
-            return Ok($"se creo correctamente el usuario {usuarioCreado.Nombre} {usuarioCreado.Usuario}");
+            return Ok($"se creo correctamente el usuario {usuario.Nombre} {usuario.Usuario}");
         }
-
+        
         [HttpGet("Headers")]
         [Authorize]
         public ActionResult<Dictionary<string, string>> GetAllHeaders()
