@@ -14,9 +14,10 @@ namespace UserManager.Repositorios
     public interface ILogin
     {
         public Task<string> Loguear(LoginDTO user);
-        public Task<CrearUsuarioDTO> CrearUsuarioSeguridad(CrearUsuarioDTO user,IDbConnection db);
+        public Task<CrearUsuarioDTO> CrearUsuarioSeguridad(CrearUsuarioDTO user, IDbConnection db);
         public Task<LoginDTO> ObtenerUsuarioLogin(string user, IDbConnection db);
         public Task<LoginDTO> ObtenerUsuarioLoginDB(string user);
+        public Task<Boolean> CambiarContraseña(CambiarContraseñaDTO contraseñaDTO);
     }
 
     public class Login : ILogin
@@ -63,7 +64,7 @@ namespace UserManager.Repositorios
 
             SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] { new Claim("USUARIO", user.Usuario),new Claim("LEGAJO", user.Contraseña) }),
+                Subject = new ClaimsIdentity(new[] { new Claim("USUARIO", user.Usuario), new Claim("LEGAJO", user.Contraseña) }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Authentication:SecretKey"])), SecurityAlgorithms.HmacSha256)
             };
@@ -91,8 +92,8 @@ namespace UserManager.Repositorios
             dp.Add("usuario", user.Usuario, DbType.String);
             dp.Add("nombre", user.Nombre, DbType.String);
             dp.Add("contraseña", passHash, DbType.String);
-            dp.Add("mail",user.Mail,DbType.String);
-            dp.Add("activo",1,DbType.Int16);
+            dp.Add("mail", user.Mail, DbType.String);
+            dp.Add("activo", 1, DbType.Int16);
 
 
             int row = await db.ExecuteAsync(sql, dp);
@@ -131,6 +132,41 @@ namespace UserManager.Repositorios
             dp.Add("user", user, DbType.String);
 
             return await db.QueryFirstOrDefaultAsync<LoginDTO>(query, dp);
+        }
+        /// <summary>
+        /// Metodo que cambia contraseña verificando la contraseña que ingresa el usuario,
+        /// se obtiene por usuario la tabla del usario y se desencripta con la contraseña que se verifico
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public async Task<Boolean> CambiarContraseña(CambiarContraseñaDTO contraseñaDTO)
+        {
+            LoginDTO userCheckPass = await this.ObtenerUsuarioLoginDB(contraseñaDTO.Usuario);
+            if (userCheckPass == null)
+            {
+                throw new Exception("Error usuario invalido");
+            }
+            if (_passwordHash.CheckHash(userCheckPass.Contraseña, contraseñaDTO.Contraseña))
+            {
+                string passHasheada = _passwordHash.Hash(contraseñaDTO.ContraseñaNueva);
+
+                using IDbConnection db = new MySqlConnection(_config.GetConnectionString("DefaultConnection"));
+                if (db.State is ConnectionState.Closed) db.Open();
+
+                using IDbTransaction transaccion = db.BeginTransaction();
+                string sql = "UPDATE T_USUARIO_LOGIN SET CONTRASEÑA = @contraseña where LEGAJO = @legajo";
+
+                DynamicParameters dp = new DynamicParameters();
+                dp.Add("contraseña", passHasheada, DbType.String);
+                dp.Add("legajo", contraseñaDTO.Legajo, DbType.Int32);
+                int row = await db.ExecuteAsync(sql, dp);
+                if (row > 0)
+                {
+                    transaccion.Commit();
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

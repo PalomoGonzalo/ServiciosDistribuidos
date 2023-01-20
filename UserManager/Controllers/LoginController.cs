@@ -96,6 +96,19 @@ namespace UserManager.Controllers
             };
             return  Ok(user);
         } 
+               
+        [HttpPut("CambiarContraseña")]
+        public async Task<IActionResult> CambiarContraseña ([FromBody] CambiarContraseñaDTO user)
+        {
+            if (await _login.CambiarContraseña(user))
+            {
+                return Ok("Se cambio correctamente la contraseña ");
+            }
+
+            return BadRequest("Error no coincide la contraseña");
+        }
+
+
 
 
 
