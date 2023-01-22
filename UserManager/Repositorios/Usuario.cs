@@ -13,7 +13,7 @@ namespace UserManager.Repositorios
         public Task<IEnumerable<UsuarioDTO>> ObtenerTodosLosUsuarios();
         public Task<UsuarioDTO> ObtenerUsuarioPorDni(int dni);
         public Task<int> InsertarRegistrarseEnUsuario(CrearUsuarioDTO login,IDbConnection db);
-        public Task <CrearUsuarioDTO>RegistrarUsuario(CrearUsuarioDTO user);
+        public Task <CrearUsuarioDTO> RegistrarUsuario(CrearUsuarioDTO user);
     }
 
     public class Usuario : IUsuario
@@ -79,7 +79,7 @@ namespace UserManager.Repositorios
         /// <param name="login"></param>
         /// <param name="db"></param>
         /// <returns></returns>
-        public async Task <int>InsertarRegistrarseEnUsuario(CrearUsuarioDTO login, IDbConnection db)
+        public async Task <int> InsertarRegistrarseEnUsuario (CrearUsuarioDTO login, IDbConnection db)
         {
             LoginDTO legajo = await _login.ObtenerUsuarioLogin(login.Usuario,db);
 
@@ -109,7 +109,7 @@ namespace UserManager.Repositorios
         /// /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        public async Task <CrearUsuarioDTO>RegistrarUsuario(CrearUsuarioDTO user)
+        public async Task <CrearUsuarioDTO> RegistrarUsuario(CrearUsuarioDTO user)
         {
             int row = 0;
             using IDbConnection db = new MySqlConnection(_config.GetConnectionString("DefaultConnection"));
@@ -121,7 +121,7 @@ namespace UserManager.Repositorios
 
             if (usuarioExiste != null)
             {
-                throw new Exception($"El usario {user.Usuario} ya existe");
+                return null;
             }
             CrearUsuarioDTO usuarioCreado = await _login.CrearUsuarioSeguridad(user,db);
 

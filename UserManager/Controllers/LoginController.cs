@@ -59,7 +59,7 @@ namespace UserManager.Controllers
 
             if(usuario==null)
             {
-                return NotFound("Error al crearse el usuario");
+                return NotFound("El usuario ya existe");
             }
 
             return Ok($"se creo correctamente el usuario {usuario.Nombre} {usuario.Usuario}");
