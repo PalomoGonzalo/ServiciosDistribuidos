@@ -38,7 +38,7 @@ namespace UserManager.Controllers
 
             if (token == null)
             {
-                return BadRequest("error en el usuario o contrase�a ");
+                return BadRequest("error en el usuario o password ");
             }
 
             // SecurityToken encodeJwt = tokenhandler.ReadJwtToken(token);
@@ -92,7 +92,7 @@ namespace UserManager.Controllers
 
             LoginDTO user = new LoginDTO {
                 Usuario = nombre,
-                Contraseña = legajo
+                Password = legajo
             };
             return  Ok(user);
         } 

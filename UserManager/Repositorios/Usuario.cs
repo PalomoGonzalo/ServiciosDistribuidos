@@ -139,5 +139,30 @@ namespace UserManager.Repositorios
             return usuarioCreado;
 
         }
+
+/*
+        public async Task<CambiarDatosUsuarioDTO> CambiarDatosUsuario (CambiarDatosUsuarioDTO user)
+        {
+            if(user==null)
+            {
+                throw new System.Exception("Error user es null");
+            }
+            
+            using IDbConnection db = new MySqlConnection(_config.GetConnectionString("DefaultConnection"));
+            if (db.State is ConnectionState.Closed) db.Open();
+            using IDbTransaction transaccion = db.BeginTransaction();
+
+            string sql = "UPDATE T_USUARIO SET NOMBRE = @nombre, TELEFONO = @telefono, DIRECCION = @direccion, DNI = @dni where LEGAJO = @legajo";
+
+            DynamicParameters dp = new DynamicParameters();
+
+            
+
+            
+            
+        }
+        */
+
+
     }
 }

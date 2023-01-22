@@ -45,7 +45,7 @@ namespace UserManager.Repositorios
                 return null;
             }
 
-            if (!(_passwordHash.CheckHash(loginUser.Contraseña, user.Contraseña)))
+            if (!(_passwordHash.CheckHash(loginUser.Password, user.Password)))
             {
                 return null;
             }
@@ -64,7 +64,7 @@ namespace UserManager.Repositorios
 
             SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] { new Claim("USUARIO", user.Usuario), new Claim("LEGAJO", user.Contraseña) }),
+                Subject = new ClaimsIdentity(new[] { new Claim("USUARIO", user.Usuario), new Claim("LEGAJO", user.Password) }),
                 Expires = DateTime.UtcNow.AddHours(1),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Authentication:SecretKey"])), SecurityAlgorithms.HmacSha256)
             };
@@ -84,7 +84,7 @@ namespace UserManager.Repositorios
             if (user == null)
                 throw new ArgumentNullException();
 
-            var passHash = _passwordHash.Hash(user.Contraseña);
+            var passHash = _passwordHash.Hash(user.Password);
 
             string sql = @"INSERT INTO T_USUARIO_LOGIN (USUARIO,NOMBRE,CONTRASEÑA,MAIL,ACTIVO) VALUES (@usuario,@nombre,@contraseña,@mail,@activo)";
 
@@ -146,9 +146,9 @@ namespace UserManager.Repositorios
             {
                 throw new Exception("Error usuario invalido");
             }
-            if (_passwordHash.CheckHash(userCheckPass.Contraseña, contraseñaDTO.Contraseña))
+            if (_passwordHash.CheckHash(userCheckPass.Password, contraseñaDTO.Password))
             {
-                string passHasheada = _passwordHash.Hash(contraseñaDTO.ContraseñaNueva);
+                string passHasheada = _passwordHash.Hash(contraseñaDTO.PasswordNueva);
 
                 using IDbConnection db = new MySqlConnection(_config.GetConnectionString("DefaultConnection"));
                 if (db.State is ConnectionState.Closed) db.Open();
