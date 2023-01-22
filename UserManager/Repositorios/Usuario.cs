@@ -155,14 +155,14 @@ namespace UserManager.Repositorios
             string sql = "UPDATE T_USUARIO SET NOMBRE = @nombre, TELEFONO = @telefono, DIRECCION = @direccion, DNI = @dni where LEGAJO = @legajo";
 
             DynamicParameters dp = new DynamicParameters();
+            dp.Add("")
 
             
 
             
             
         }
-        */
 
-
+*/
     }
 }
