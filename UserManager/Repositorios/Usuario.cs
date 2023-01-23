@@ -13,7 +13,8 @@ namespace UserManager.Repositorios
         public Task<IEnumerable<UsuarioDTO>> ObtenerTodosLosUsuarios();
         public Task<UsuarioDTO> ObtenerUsuarioPorDni(int dni);
         public Task<int> InsertarRegistrarseEnUsuario(CrearUsuarioDTO login,IDbConnection db);
-        public Task <CrearUsuarioDTO> RegistrarUsuario(CrearUsuarioDTO user);
+        public Task <CrearUsuarioDTOResponse> RegistrarUsuario(CrearUsuarioDTO user);
+        public Task<CambiarDatosUsuarioDTO> CambiarDatosUsuario (CambiarDatosUsuarioDTO user);
     }
 
     public class Usuario : IUsuario
@@ -56,7 +57,14 @@ namespace UserManager.Repositorios
             DynamicParameters dp = new DynamicParameters();
             dp.Add("user", dni, DbType.Int64);
 
-            return await db.QueryFirstOrDefaultAsync<UsuarioDTO>(query, dp);
+            UsuarioDTO user =await db.QueryFirstOrDefaultAsync<UsuarioDTO>(query, dp);
+
+            if(user == null)
+            {
+                throw new Exception("Error, el usuario no existe");
+            }
+            return user;
+
         }
         /// <summary>
         /// Se obtiene todos los usuarios que esten activos
@@ -69,6 +77,11 @@ namespace UserManager.Repositorios
             string query = $@"SELECT * FROM T_USUARIO where ACTIVO = 1";
 
             IEnumerable<UsuarioDTO> listaUsuario = await db.QueryAsync<UsuarioDTO>(query).ConfigureAwait(false);
+
+            if (listaUsuario==null)
+            {
+                throw new Exception("Error al traer los usuarios");
+            }
 
             return listaUsuario;
         }
@@ -90,7 +103,7 @@ namespace UserManager.Repositorios
             dp.Add("nombre", login.Nombre, DbType.String);
             dp.Add("mail", login.Mail, DbType.String);
             dp.Add("rol", 1, DbType.Int16);
-            dp.Add("activo", 1, DbType.Int16);
+            dp.Add("activo", Types.EnumsLib.TipoEstado.Activo, DbType.Int16);
 
             int row = await db.ExecuteAsync(query, dp);
             if (row == 0)
@@ -109,7 +122,7 @@ namespace UserManager.Repositorios
         /// /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        public async Task <CrearUsuarioDTO> RegistrarUsuario(CrearUsuarioDTO user)
+        public async Task <CrearUsuarioDTOResponse> RegistrarUsuario(CrearUsuarioDTO user)
         {
             int row = 0;
             using IDbConnection db = new MySqlConnection(_config.GetConnectionString("DefaultConnection"));
@@ -121,7 +134,7 @@ namespace UserManager.Repositorios
 
             if (usuarioExiste != null)
             {
-                return null;
+                throw new Exception ($"Error el usuario ya existe");
             }
             CrearUsuarioDTO usuarioCreado = await _login.CrearUsuarioSeguridad(user,db);
 
@@ -136,16 +149,30 @@ namespace UserManager.Repositorios
                 transaccion.Rollback();
             }
             transaccion.Commit();
-            return usuarioCreado;
+
+            CrearUsuarioDTOResponse userResponse = new CrearUsuarioDTOResponse{Usuario = usuarioCreado.Usuario, Nombre = usuarioCreado.Nombre, Mail= usuarioCreado.Mail};
+            return userResponse ;
 
         }
 
-/*
+        /// <summary>
+        /// Se cambia los datos del usuario en la tabla t_usuario por legajo, pasandole todo los parametros aunque no lo vaya a cambiar
+        /// Por que lo pisa
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public async Task<CambiarDatosUsuarioDTO> CambiarDatosUsuario (CambiarDatosUsuarioDTO user)
         {
             if(user==null)
             {
-                throw new System.Exception("Error user es null");
+                throw new System.Exception("Error usuario es nulo");
+            }
+
+            UsuarioDTO userLegajo = await this.ObtenerUsuarioPorLegajo(user.Legajo);
+
+            if(userLegajo==null)
+            {
+                throw new System.Exception("Error El usuario No existe");
             }
             
             using IDbConnection db = new MySqlConnection(_config.GetConnectionString("DefaultConnection"));
@@ -155,14 +182,20 @@ namespace UserManager.Repositorios
             string sql = "UPDATE T_USUARIO SET NOMBRE = @nombre, TELEFONO = @telefono, DIRECCION = @direccion, DNI = @dni where LEGAJO = @legajo";
 
             DynamicParameters dp = new DynamicParameters();
-            dp.Add("")
 
-            
+            dp.Add("nombre",user.Nombre,DbType.String);
+            dp.Add("telefono",user.Telefono,DbType.String);
+            dp.Add("direccion",user.Direccion,DbType.String);
+            dp.Add("dni",user.Dni,DbType.String);
+            dp.Add("legajo",user.Legajo,DbType.Int16);
 
-            
-            
+            int row = await db.ExecuteAsync(sql,dp);
+            if(row<=0)
+            {
+                throw new Exception("Error al cambiar datos del usuario");
+            }
+            transaccion.Commit();
+            return user;
         }
-
-*/
     }
 }

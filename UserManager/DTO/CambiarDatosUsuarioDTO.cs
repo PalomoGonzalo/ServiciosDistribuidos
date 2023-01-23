@@ -11,6 +11,7 @@ namespace UserManager.DTO
         public string Telefono { get; set; }
         public string Direccion { get; set; }
         public int Dni { get; set; }
+        public int Legajo { get; set; }
         
     }
 }

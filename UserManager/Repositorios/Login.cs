@@ -93,7 +93,7 @@ namespace UserManager.Repositorios
             dp.Add("nombre", user.Nombre, DbType.String);
             dp.Add("contraseña", passHash, DbType.String);
             dp.Add("mail", user.Mail, DbType.String);
-            dp.Add("activo", 1, DbType.Int16);
+            dp.Add("activo", Types.EnumsLib.TipoEstado.Activo, DbType.Int16);
 
 
             int row = await db.ExecuteAsync(sql, dp);
@@ -154,19 +154,24 @@ namespace UserManager.Repositorios
                 if (db.State is ConnectionState.Closed) db.Open();
 
                 using IDbTransaction transaccion = db.BeginTransaction();
-                string sql = "UPDATE T_USUARIO_LOGIN SET CONTRASEÑA = @contraseña where LEGAJO = @legajo";
+                string sql = "UPDATE T_USUARIO_LOGIN SET PASSWORD = @contraseña where LEGAJO = @legajo";
 
                 DynamicParameters dp = new DynamicParameters();
                 dp.Add("contraseña", passHasheada, DbType.String);
                 dp.Add("legajo", contraseñaDTO.Legajo, DbType.Int32);
                 int row = await db.ExecuteAsync(sql, dp);
-                if (row > 0)
+                if (row <= 0)
                 {
-                    transaccion.Commit();
-                    return true;
+                    throw new Exception("Error al cambiar la contraseña, legajo no coinciden");
                 }
+                transaccion.Commit();
             }
-            return false;
+            else
+            {
+                throw new Exception("Error la contraseña no coinciden");
+            }
+            
+            return true;
         }
     }
 }

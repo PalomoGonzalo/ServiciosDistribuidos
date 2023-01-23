@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using UserManager.DTO;
 using UserManager.Repositorios;
+using UserManager.Types;
 using Microsoft.AspNetCore.Authorization;
 
 namespace UserManager.Controllers
@@ -32,6 +33,7 @@ namespace UserManager.Controllers
         public async Task<IActionResult> Loguear([FromBody] LoginDTO user)
         {
             //JwtSecurityTokenHandler tokenhandler = new JwtSecurityTokenHandler();
+
             if (user == null)
                 return BadRequest("Error datos no validos");
             string token = await _login.Loguear(user);
@@ -45,26 +47,29 @@ namespace UserManager.Controllers
             //var tokenLectura = new JwtSecurityTokenHandler().ReadJwtToken(token);
             //var claim = tokenLectura.Claims.ToString();
 
-            return Ok(token);
+            return Ok(new { Token = token });
         }
         /// <summary>
-        /// Crear contraseña
+        /// Registra un usuario en t_usuario_lgoin y tambien inserta datos en la tabla t_usuario
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
         [HttpPost("RegistrarUsuario")]
         public async Task<IActionResult> RegistrarUsuario([FromBody] CrearUsuarioDTO user)
         {
-            CrearUsuarioDTO usuario =await _usuario.RegistrarUsuario(user);
-
-            if(usuario==null)
+            try
             {
-                return NotFound("El usuario ya existe");
+                CrearUsuarioDTOResponse usuario = await _usuario.RegistrarUsuario(user);
+                return Ok(new HttpResponseOk { data = usuario, msg = "Se creo correctamente el usuario" });
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new HttpBadResponse(ex));
             }
 
-            return Ok($"se creo correctamente el usuario {usuario.Nombre} {usuario.Usuario}");
         }
-        
+
         [HttpGet("Headers")]
         [Authorize]
         public ActionResult<Dictionary<string, string>> GetAllHeaders()
@@ -83,34 +88,34 @@ namespace UserManager.Controllers
         public IActionResult GetHeaders()
         {
             string test = Request.Headers.Authorization;
-            string  []strlist = test.Split("Bearer ",StringSplitOptions.RemoveEmptyEntries);
-            test = String.Join("",strlist);
+            string[] strlist = test.Split("Bearer ", StringSplitOptions.RemoveEmptyEntries);
+            test = String.Join("", strlist);
 
             var tokenLectura = new JwtSecurityTokenHandler().ReadJwtToken(test);
-            string nombre = tokenLectura.Claims.Where(x=>x.Type=="USUARIO").Select(c=>c.Value).SingleOrDefault();
-            string legajo = tokenLectura.Claims.Where(x=>x.Type=="LEGAJO").Select(c=>c.Value).SingleOrDefault();
+            string nombre = tokenLectura.Claims.Where(x => x.Type == "USUARIO").Select(c => c.Value).SingleOrDefault();
+            string legajo = tokenLectura.Claims.Where(x => x.Type == "LEGAJO").Select(c => c.Value).SingleOrDefault();
 
-            LoginDTO user = new LoginDTO {
+            LoginDTO user = new LoginDTO
+            {
                 Usuario = nombre,
                 Password = legajo
             };
-            return  Ok(user);
-        } 
-               
-        [HttpPut("CambiarContraseña")]
-        public async Task<IActionResult> CambiarContraseña ([FromBody] CambiarContraseñaDTO user)
-        {
-            if (await _login.CambiarContraseña(user))
-            {
-                return Ok("Se cambio correctamente la contraseña ");
-            }
-
-            return BadRequest("Error no coincide la contraseña");
+            return Ok(user);
         }
 
+        [HttpPut("CambiarContraseña")]
+        public async Task<IActionResult> CambiarContraseña([FromBody] CambiarContraseñaDTO user)
+        {
+            try
+            {
+                await _login.CambiarContraseña(user);
 
-
-
-
+                return Ok(new HttpResponseOk { msg = "Se cambio correctamente la contraseña" });
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(new HttpBadResponse(ex));
+            }
+        }
     }
 }
