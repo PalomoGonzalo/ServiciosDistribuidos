@@ -55,6 +55,7 @@ namespace UserManager.Repositorios
             string query = $@"SELECT * FROM T_USUARIO WHERE DNI=@user";
 
             DynamicParameters dp = new DynamicParameters();
+
             dp.Add("user", dni, DbType.Int64);
 
             UsuarioDTO user =await db.QueryFirstOrDefaultAsync<UsuarioDTO>(query, dp);

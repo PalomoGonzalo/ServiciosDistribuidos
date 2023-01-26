@@ -17,8 +17,6 @@ namespace UserManager.Controllers
         {
             _usuario = user;
         }
-
-
         /// <summary>
         /// Obtiene usuario por legajo de la tabla T_USUARIO
         /// </summary>
@@ -68,6 +66,7 @@ namespace UserManager.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("ObtenerTodosLosUsuarios/")]
+        [Authorize]
         public async Task<IActionResult> ObtenerTodosLosUsuarios()
         {
             try
@@ -86,6 +85,7 @@ namespace UserManager.Controllers
         /// <param name="user"></param>
         /// <returns></returns>
         [HttpPut("CambiarDatosUsuario")]
+        [Authorize]
         public async Task<IActionResult> CambiarDatosUsuario (CambiarDatosUsuarioDTO user)
         {
             try
@@ -97,9 +97,6 @@ namespace UserManager.Controllers
             {
                 return BadRequest(new HttpBadResponse(ex));
             }
-
         }
-
-        
     }
 }

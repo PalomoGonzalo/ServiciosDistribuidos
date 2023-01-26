@@ -69,6 +69,10 @@ namespace UserManager.Controllers
             }
 
         }
+        /// <summary>
+        /// prubeas de headers con los tokens
+        /// </summary>
+        /// <returns></returns>
 
         [HttpGet("Headers")]
         [Authorize]
@@ -82,7 +86,10 @@ namespace UserManager.Controllers
             }
             return requestHeaders;
         }
-
+        /// <summary>
+        /// prubeas de headers con los tokens
+        /// </summary>
+        /// <returns></returns>
         [HttpGet("Header")]
         [Authorize]
         public IActionResult GetHeaders()
@@ -102,6 +109,11 @@ namespace UserManager.Controllers
             };
             return Ok(user);
         }
+        /// <summary>
+        /// Cambia la contraseña, verificando que ingrese la anterior correctamente
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
 
         [HttpPut("CambiarContraseña")]
         public async Task<IActionResult> CambiarContraseña([FromBody] CambiarContraseñaDTO user)
