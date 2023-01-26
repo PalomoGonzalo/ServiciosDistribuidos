@@ -18,6 +18,8 @@ namespace UserManager.Repositorios
         public Task<LoginDTO> ObtenerUsuarioLogin(string user, IDbConnection db);
         public Task<LoginDTO> ObtenerUsuarioLoginDB(string user);
         public Task<Boolean> CambiarContraseña(CambiarContraseñaDTO contraseñaDTO);
+        public Task<Boolean> CambiarContraseñaForzada(CambiarContraseñaDTO contraseñaDTO);
+
     }
 
     public class Login : ILogin
@@ -171,6 +173,31 @@ namespace UserManager.Repositorios
                 throw new Exception("Error la contraseña no coinciden");
             }
             
+            return true;
+        }
+
+        public async Task<Boolean> CambiarContraseñaForzada(CambiarContraseñaDTO contraseñaDTO)
+        {
+            
+                string passHasheada = _passwordHash.Hash(contraseñaDTO.PasswordNueva);
+
+                using IDbConnection db = new MySqlConnection(_config.GetConnectionString("DefaultConnection"));
+                if (db.State is ConnectionState.Closed) db.Open();
+
+                using IDbTransaction transaccion = db.BeginTransaction();
+
+
+                string sql = "UPDATE T_USUARIO_LOGIN SET PASSWORD = @contraseña where LEGAJO = @legajo";
+
+                DynamicParameters dp = new DynamicParameters();
+                dp.Add("contraseña", passHasheada, DbType.String);
+                dp.Add("legajo", contraseñaDTO.Legajo, DbType.Int32);
+                int row = await db.ExecuteAsync(sql, dp);
+                if (row <= 0)
+                {
+                    throw new Exception("Error al cambiar la contraseña, legajo no coinciden");
+                }
+                transaccion.Commit();     
             return true;
         }
     }

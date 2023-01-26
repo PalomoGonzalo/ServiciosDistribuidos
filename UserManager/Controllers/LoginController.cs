@@ -131,5 +131,27 @@ namespace UserManager.Controllers
                 return BadRequest(new HttpBadResponse(ex));
             }
         }
+
+        /// <summary>
+        /// Se cambia de contraseña de cualquer usuario solo el administrador lo puede realizar
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+
+        [HttpPut("CambiarContraseñaForzada")]
+        public async Task<IActionResult> CambiarContraseñaForzada([FromBody] CambiarContraseñaDTO user)
+        {
+            try
+            {
+                await _login.CambiarContraseñaForzada(user);
+
+                return Ok(new HttpResponseOk { msg = "Se cambio correctamente la contraseña" });
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(new HttpBadResponse(ex));
+            }
+        }
+
     }
 }
