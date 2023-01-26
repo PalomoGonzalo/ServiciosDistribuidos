@@ -43,11 +43,13 @@ namespace UserManager.Controllers
                 return BadRequest("error en el usuario o password ");
             }
 
+            LoginDTO id = await _login.ObtenerUsuarioLoginDB(user.Usuario);
+
             // SecurityToken encodeJwt = tokenhandler.ReadJwtToken(token);
             //var tokenLectura = new JwtSecurityTokenHandler().ReadJwtToken(token);
             //var claim = tokenLectura.Claims.ToString();
 
-            return Ok(new { Token = token });
+            return Ok(new { Token = token, Legajo = id.Legajo });
         }
         /// <summary>
         /// Registra un usuario en t_usuario_lgoin y tambien inserta datos en la tabla t_usuario
