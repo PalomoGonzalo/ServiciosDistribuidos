@@ -1,4 +1,0 @@
-# ServiciosDistribuidos
-
-
-Servicios distribuidos
