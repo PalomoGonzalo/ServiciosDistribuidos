@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "AfpX85oqTa3N0fJerpOE4hrOy7kSwqH71z/OrXSH0sEhf738aimH2cHTMniDzi5pLa1A+LtJQesfpL9txPqJhw==",
+  "dgSpecHash": "w1aw8xSY2Tbfsu7EFwr3GGVcJOZwOiJ5sSslPjggWpvy8q4W5jt7TwK3xuR5HeGA+1Ub9h+ZbVHDhZl2oS63zQ==",
   "success": true,
   "projectFilePath": "C:\\Users\\153131\\Desktop\\ServiciosDistribuidos\\ServiciosDistribuidos\\UserManager\\UserManager.csproj",
   "expectedPackageFiles": [
@@ -41,6 +41,7 @@
     "C:\\Users\\153131\\.nuget\\packages\\microsoft.win32.systemevents\\4.7.0\\microsoft.win32.systemevents.4.7.0.nupkg.sha512",
     "C:\\Users\\153131\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
     "C:\\Users\\153131\\.nuget\\packages\\mysql.data\\8.0.31\\mysql.data.8.0.31.nupkg.sha512",
+    "C:\\Users\\153131\\.nuget\\packages\\newtonsoft.json\\13.0.2\\newtonsoft.json.13.0.2.nupkg.sha512",
     "C:\\Users\\153131\\.nuget\\packages\\portable.bouncycastle\\1.9.0\\portable.bouncycastle.1.9.0.nupkg.sha512",
     "C:\\Users\\153131\\.nuget\\packages\\swashbuckle.aspnetcore\\6.2.3\\swashbuckle.aspnetcore.6.2.3.nupkg.sha512",
     "C:\\Users\\153131\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.2.3\\swashbuckle.aspnetcore.swagger.6.2.3.nupkg.sha512",

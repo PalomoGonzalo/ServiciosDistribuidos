@@ -88,6 +88,8 @@ builder.Services.Configure<PassOptions>(section);
 builder.Services.AddScoped<ILogin, Login>();
 builder.Services.AddTransient<IPasswordHasherRepositorio, PasswordHaserRepositorio>();
 builder.Services.AddScoped<IUsuario, Usuario>();
+builder.Services.AddScoped<IEventos, Eventos>();
+
 
 
 

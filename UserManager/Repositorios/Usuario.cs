@@ -3,6 +3,7 @@ using System.Data;
 using Dapper;
 using MySql.Data.MySqlClient;
 using UserManager.DTO;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace UserManager.Repositorios
 {
@@ -13,8 +14,9 @@ namespace UserManager.Repositorios
         public Task<IEnumerable<UsuarioDTO>> ObtenerTodosLosUsuarios();
         public Task<UsuarioDTO> ObtenerUsuarioPorDni(int dni);
         public Task<int> InsertarRegistrarseEnUsuario(CrearUsuarioDTO login,IDbConnection db);
-        public Task <CrearUsuarioDTOResponse> RegistrarUsuario(CrearUsuarioDTO user);
+        public Task <CrearUsuarioDTOResponse> RegistrarUsuario(CrearUsuarioDTO user,HttpContext http);
         public Task<CambiarDatosUsuarioDTO> CambiarDatosUsuario (CambiarDatosUsuarioDTO user);
+        public string GetHeadersLegajo(HttpContext http);
     }
 
     public class Usuario : IUsuario
@@ -22,10 +24,14 @@ namespace UserManager.Repositorios
         private readonly IConfiguration _config;
         private readonly ILogin _login;
 
-        public Usuario(IConfiguration config, ILogin login)
+        private readonly IEventos _eventos;
+
+
+        public Usuario(IConfiguration config, ILogin login, IEventos eventos = null)
         {
             _config = config;
             _login = login;
+            _eventos = eventos;
         }
         /// <summary>
         /// Se obtiene usuario por legajo
@@ -123,7 +129,7 @@ namespace UserManager.Repositorios
         /// /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        public async Task <CrearUsuarioDTOResponse> RegistrarUsuario(CrearUsuarioDTO user)
+        public async Task <CrearUsuarioDTOResponse> RegistrarUsuario(CrearUsuarioDTO user,HttpContext http)
         {
             int row = 0;
             using IDbConnection db = new MySqlConnection(_config.GetConnectionString("DefaultConnection"));
@@ -143,9 +149,13 @@ namespace UserManager.Repositorios
             {
                 throw new Exception ($"Error al crear el usuario");
             }
+            string legajoQuienRealizaAccion = this.GetHeadersLegajo(http);
 
             row = await this.InsertarRegistrarseEnUsuario(usuarioCreado,db);
-            if(row==0)
+
+            int rowEvento = await _eventos.InsertarEventoRegistrarUsuario(user,legajoQuienRealizaAccion);
+
+            if(row==0 && rowEvento == 0)
             {
                 transaccion.Rollback();
             }
@@ -198,5 +208,25 @@ namespace UserManager.Repositorios
             transaccion.Commit();
             return user;
         }
+
+        public string GetHeadersLegajo(HttpContext http)
+        {
+            string test = http.Request.Headers.Authorization;
+            string[] strlist = test.Split("Bearer ", StringSplitOptions.RemoveEmptyEntries);
+            test = String.Join("", strlist);
+
+            var tokenLectura = new JwtSecurityTokenHandler().ReadJwtToken(test);
+            string nombre = tokenLectura.Claims.Where(x => x.Type == "USUARIO").Select(c => c.Value).SingleOrDefault();
+            string legajo = tokenLectura.Claims.Where(x => x.Type == "LEGAJO").Select(c => c.Value).SingleOrDefault();
+
+
+            return nombre;
+
+             
+        }
+
+
+
+
     }
 }

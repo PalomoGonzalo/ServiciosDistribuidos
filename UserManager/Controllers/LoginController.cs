@@ -56,12 +56,13 @@ namespace UserManager.Controllers
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
+        [Authorize]
         [HttpPost("RegistrarUsuario")]
         public async Task<IActionResult> RegistrarUsuario([FromBody] CrearUsuarioDTO user)
         {
             try
             {
-                CrearUsuarioDTOResponse usuario = await _usuario.RegistrarUsuario(user);
+                CrearUsuarioDTOResponse usuario = await _usuario.RegistrarUsuario(user,this.HttpContext);
                 return Ok(new HttpResponseOk { data = usuario, msg = "Se creo correctamente el usuario" });
 
             }
@@ -109,7 +110,9 @@ namespace UserManager.Controllers
                 Usuario = nombre,
                 Password = legajo
             };
-            return Ok(user);
+            return Ok(user.Legajo);
+
+             
         }
         /// <summary>
         /// Cambia la contraseña, verificando que ingrese la anterior correctamente

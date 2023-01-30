@@ -368,3 +368,4 @@ C:\Users\153131\Desktop\ServiciosDistribuidos\ServiciosDistribuidos\UserManager\
 C:\Users\153131\Desktop\ServiciosDistribuidos\ServiciosDistribuidos\UserManager\obj\Debug\net6.0\UserManager.pdb
 C:\Users\153131\Desktop\ServiciosDistribuidos\ServiciosDistribuidos\UserManager\obj\Debug\net6.0\UserManager.genruntimeconfig.cache
 C:\Users\153131\Desktop\ServiciosDistribuidos\ServiciosDistribuidos\UserManager\obj\Debug\net6.0\ref\UserManager.dll
+C:\Users\153131\Desktop\ServiciosDistribuidos\ServiciosDistribuidos\UserManager\bin\Debug\net6.0\Newtonsoft.Json.dll
