@@ -153,11 +153,12 @@ namespace UserManager.Repositorios
 
             row = await this.InsertarRegistrarseEnUsuario(usuarioCreado,db);
 
-            int rowEvento = await _eventos.InsertarEventoRegistrarUsuario(user,legajoQuienRealizaAccion);
+            int rowEvento = await _eventos.InsertarEventoRegistrarUsuario(user,legajoQuienRealizaAccion,db);
 
             if(row==0 && rowEvento == 0)
             {
                 transaccion.Rollback();
+                throw new Exception($"Error Al Insertar el evento");
             }
             transaccion.Commit();
 

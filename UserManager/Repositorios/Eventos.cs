@@ -7,13 +7,14 @@ using Dapper;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using UserManager.DTO;
+using UserManager.Helpers;
 
 namespace UserManager.Repositorios
 {
 
     public interface IEventos
     {
-        Task <int> InsertarEventoRegistrarUsuario(CrearUsuarioDTO user,string usuarioQuienRealiza);
+        Task <int> InsertarEventoRegistrarUsuario(CrearUsuarioDTO user,string usuarioQuienRealiza,IDbConnection db);
 
     }
     public class Eventos : IEventos
@@ -21,31 +22,31 @@ namespace UserManager.Repositorios
 
         private readonly IConfiguration _config;
 
-        public Eventos(IConfiguration config)
+        private readonly IMapper _maper;
+
+        public Eventos(IConfiguration config, IMapper maper = null)
         {
             _config = config;
+            _maper = maper;
         }
 
-        public async Task<int> InsertarEventoRegistrarUsuario(CrearUsuarioDTO user, string usuarioQuienRealiza)
+        public async Task<int> InsertarEventoRegistrarUsuario(CrearUsuarioDTO user, string usuarioQuienRealiza, IDbConnection db)
         {
-            using IDbConnection db = new MySqlConnection(_config.GetConnectionString("DefaultConnection"));
+            EventoRegistrarUsuarioDTO userioEvento = _maper.MapCrearUsuarioAEventoRegistrarUsuario(user);
 
-            EventoDTO evento = new EventoDTO();
+            string usuario2 =JsonConvert.SerializeObject(userioEvento);
 
-            string registrarUsuario = "RegitrarUsuario";
-
-            string usuario2 =JsonConvert.SerializeObject(user);
-
-            string sql = $@"INSERT INTO T_EVENTOS (ID_EVENTO, EVENTONOMBRE, USUARIO) VALUES (@id_evento,@eventonombre,@usuario)";
+            string sql = $@"INSERT INTO T_EVENTOS (ID_EVENTO, EVENTONOMBRE, USUARIO, DATO) VALUES (@id_evento,@eventonombre,@usuario,@dato)";
 
             DynamicParameters dp = new DynamicParameters();
 
             dp.Add("id_evento",1,DbType.Int16);
-            dp.Add("eventonombre",registrarUsuario,DbType.String);
+            dp.Add("eventonombre","RegitrarUsuario",DbType.String);
             dp.Add("usuario",usuarioQuienRealiza,DbType.String);
+            dp.Add("dato",usuario2,DbType.String);
            
 
-            int row = await db.ExecuteAsync(sql,db);
+            int row = await db.ExecuteAsync(sql,dp);
             return row;
 
         }

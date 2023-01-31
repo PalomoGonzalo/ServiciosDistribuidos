@@ -2,6 +2,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using UserManager.Helpers;
 using UserManager.Options;
 using UserManager.Repositorios;
 
@@ -89,6 +90,7 @@ builder.Services.AddScoped<ILogin, Login>();
 builder.Services.AddTransient<IPasswordHasherRepositorio, PasswordHaserRepositorio>();
 builder.Services.AddScoped<IUsuario, Usuario>();
 builder.Services.AddScoped<IEventos, Eventos>();
+builder.Services.AddScoped<IMapper,Mapper>();
 
 
 
