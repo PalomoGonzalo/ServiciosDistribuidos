@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "c:\\Users\\153131\\Desktop\\ServiciosDistribuidos\\ServiciosDistribuidos\\Ordenes\\Ordenes.csproj": {}
+    "C:\\Users\\153131\\Desktop\\ServiciosDistribuidos\\ServiciosDistribuidos\\Ordenes\\Ordenes.csproj": {}
   },
   "projects": {
-    "c:\\Users\\153131\\Desktop\\ServiciosDistribuidos\\ServiciosDistribuidos\\Ordenes\\Ordenes.csproj": {
+    "C:\\Users\\153131\\Desktop\\ServiciosDistribuidos\\ServiciosDistribuidos\\Ordenes\\Ordenes.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "c:\\Users\\153131\\Desktop\\ServiciosDistribuidos\\ServiciosDistribuidos\\Ordenes\\Ordenes.csproj",
+        "projectUniqueName": "C:\\Users\\153131\\Desktop\\ServiciosDistribuidos\\ServiciosDistribuidos\\Ordenes\\Ordenes.csproj",
         "projectName": "Ordenes",
-        "projectPath": "c:\\Users\\153131\\Desktop\\ServiciosDistribuidos\\ServiciosDistribuidos\\Ordenes\\Ordenes.csproj",
+        "projectPath": "C:\\Users\\153131\\Desktop\\ServiciosDistribuidos\\ServiciosDistribuidos\\Ordenes\\Ordenes.csproj",
         "packagesPath": "C:\\Users\\153131\\.nuget\\packages\\",
-        "outputPath": "c:\\Users\\153131\\Desktop\\ServiciosDistribuidos\\ServiciosDistribuidos\\Ordenes\\obj\\",
+        "outputPath": "C:\\Users\\153131\\Desktop\\ServiciosDistribuidos\\ServiciosDistribuidos\\Ordenes\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\153131\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -21,6 +21,7 @@
           "net6.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -43,9 +44,21 @@
               "target": "Package",
               "version": "[2.0.123, )"
             },
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[6.0.5, )"
+            },
+            "Microsoft.Extensions.Http": {
+              "target": "Package",
+              "version": "[7.0.0, )"
+            },
             "MySql.Data": {
               "target": "Package",
               "version": "[8.0.32, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.2, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
