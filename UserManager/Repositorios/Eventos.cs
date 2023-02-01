@@ -14,12 +14,11 @@ namespace UserManager.Repositorios
 
     public interface IEventos
     {
-        Task <int> InsertarEventoRegistrarUsuario(CrearUsuarioDTO user,string usuarioQuienRealiza,IDbConnection db);
-
+        Task<int> InsertarEventoRegistrarUsuario(CrearUsuarioDTO user, string usuarioQuienRealiza, IDbConnection db);
+        public Task<IEnumerable<EventoDTO>> ObtenerEventosPorIdEvento(int idEvento);
     }
     public class Eventos : IEventos
     {
-
         private readonly IConfiguration _config;
 
         private readonly IMapper _maper;
@@ -34,21 +33,46 @@ namespace UserManager.Repositorios
         {
             EventoRegistrarUsuarioDTO userioEvento = _maper.MapCrearUsuarioAEventoRegistrarUsuario(user);
 
-            string usuario2 =JsonConvert.SerializeObject(userioEvento);
+            string usuario2 = JsonConvert.SerializeObject(userioEvento);
 
             string sql = $@"INSERT INTO T_EVENTOS (ID_EVENTO, EVENTONOMBRE, USUARIO, DATO) VALUES (@id_evento,@eventonombre,@usuario,@dato)";
 
             DynamicParameters dp = new DynamicParameters();
 
-            dp.Add("id_evento",1,DbType.Int16);
-            dp.Add("eventonombre","RegitrarUsuario",DbType.String);
-            dp.Add("usuario",usuarioQuienRealiza,DbType.String);
-            dp.Add("dato",usuario2,DbType.String);
-           
+            dp.Add("id_evento", 1, DbType.Int16);
+            dp.Add("eventonombre", "RegitrarUsuario", DbType.String);
+            dp.Add("usuario", usuarioQuienRealiza, DbType.String);
+            dp.Add("dato", usuario2, DbType.String);
 
-            int row = await db.ExecuteAsync(sql,dp);
+            int row = await db.ExecuteAsync(sql, dp);
+            
             return row;
+        }
 
+        public async Task<IEnumerable<EventoDTO>> ObtenerEventosPorIdEvento(int idEvento)
+        {
+            using IDbConnection db = new MySqlConnection(_config.GetConnectionString("DefaultConnection"));
+
+            string sql = $@"SELECT * FROM T_EVENTOS WHERE ID_EVENTO = @id";
+
+            DynamicParameters dp = new DynamicParameters();
+
+            dp.Add("id", idEvento, DbType.Int16);
+
+            IEnumerable<EventoDTO> eventos = await db.QueryAsync<EventoDTO>(sql, dp).ConfigureAwait(false);
+
+            if (eventos == null)
+            {
+                throw new Exception(@$"No hay datos para el id {idEvento}");
+            }
+
+            foreach (var item in eventos)
+            {
+                if(item.Dato != null)
+                    item.DatoUsuario = JsonConvert.DeserializeObject<EventoRegistrarUsuarioDTO>(item.Dato);
+            }
+            
+            return eventos;
         }
     }
 }

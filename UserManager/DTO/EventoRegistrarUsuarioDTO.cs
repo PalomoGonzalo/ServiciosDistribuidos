@@ -11,4 +11,5 @@ namespace UserManager.DTO
         public string Nombre { get; set; }
         public string Mail { get; set; }
     }
+
 }

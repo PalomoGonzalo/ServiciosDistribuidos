@@ -67,7 +67,7 @@ namespace UserManager.Repositorios
             SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] { new Claim("USUARIO", user.Usuario), new Claim("LEGAJO", user.Password) }),
-                Expires = DateTime.UtcNow.AddMilliseconds(20),
+                Expires = DateTime.UtcNow.AddHours(24),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Authentication:SecretKey"])), SecurityAlgorithms.HmacSha256)
             };
 
