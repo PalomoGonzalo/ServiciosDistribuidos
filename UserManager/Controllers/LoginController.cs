@@ -110,7 +110,7 @@ namespace UserManager.Controllers
                 Usuario = nombre,
                 Password = legajo
             };
-            return Ok(user.Legajo);
+            return Ok(user);
 
              
         }

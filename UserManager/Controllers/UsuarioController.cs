@@ -48,6 +48,7 @@ namespace UserManager.Controllers
         /// <returns></returns>
         [HttpGet("ObtenerUsuarioPorDni/{dni}")]
         [Authorize]
+        
         public async Task<IActionResult> ObtenerUsuarioPorDni(int dni)
         {
             try
