@@ -78,7 +78,7 @@ namespace UserManager.Controllers
         /// <returns></returns>
 
         [HttpGet("Headers")]
-        [Authorize]
+        
         public ActionResult<Dictionary<string, string>> GetAllHeaders()
         {
             Dictionary<string, string> requestHeaders =
@@ -87,6 +87,8 @@ namespace UserManager.Controllers
             {
                 requestHeaders.Add(header.Key, header.Value);
             }
+            
+            
             return requestHeaders;
         }
         /// <summary>
@@ -94,10 +96,10 @@ namespace UserManager.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("Header")]
-        [Authorize]
+        
         public IActionResult GetHeaders()
         {
-            string test = Request.Headers.Authorization;
+           /* string test = Request.Headers.Authorization;
             string[] strlist = test.Split("Bearer ", StringSplitOptions.RemoveEmptyEntries);
             test = String.Join("", strlist);
 
@@ -110,7 +112,10 @@ namespace UserManager.Controllers
                 Usuario = nombre,
                 Password = legajo
             };
-            return Ok(user);
+            */
+
+            var test2 = HttpContext.Connection.LocalIpAddress.ToString();
+            return Ok(test2);
 
              
         }
