@@ -7,6 +7,7 @@ using UserManager.DTO;
 using UserManager.Repositorios;
 using UserManager.Types;
 using Microsoft.AspNetCore.Authorization;
+using System.Globalization;
 
 namespace UserManager.Controllers
 {
@@ -114,10 +115,11 @@ namespace UserManager.Controllers
             };
             */
             
-            var test2 =  DateTime.Now;
-            return Ok(test2);
+            DateTime test2 = DateTime.Now;
+            var fechaParseada = DateTime.ParseExact(test2.ToString(@"yyyy-MM-dd HH:mm:ss"), @"yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+            //var test = fechaParseada.ToLongDateString();
+            return Ok(fechaParseada.ToString("yyyy-MM-dd HH:mm:ss"));
 
-             
         }
         /// <summary>
         /// Cambia la contraseña, verificando que ingrese la anterior correctamente
