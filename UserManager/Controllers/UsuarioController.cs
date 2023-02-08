@@ -99,5 +99,24 @@ namespace UserManager.Controllers
                 return BadRequest(new HttpBadResponse(ex));
             }
         }
+        /// <summary>
+        /// Se da debaja logica en las tablas t_usuario y t_usuario_login, requeriendo siempre el token athorize
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        [HttpDelete("DarDeBajaLogicaUsuario")]
+        [Authorize]
+        public async Task<IActionResult> DarDeBajaLogicaUsuario (UsuarioBajaDTO user)
+        {
+            try
+            {
+                UsuarioBajaDTO usuario = await _usuario.DarDeBajaLogicaUsuario(user);
+                return Ok(new HttpResponseOk{data = usuario, msg = $" Se de dio de baja correctamente el legajo {usuario.Legajo}"});
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(new HttpBadResponse(ex));
+            }
+        }
     }
 }

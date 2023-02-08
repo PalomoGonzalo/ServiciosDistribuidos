@@ -4,6 +4,7 @@ using Dapper;
 using MySql.Data.MySqlClient;
 using UserManager.DTO;
 using System.IdentityModel.Tokens.Jwt;
+using static UserManager.Types.EnumsLib;
 
 namespace UserManager.Repositorios
 {
@@ -13,10 +14,14 @@ namespace UserManager.Repositorios
         public Task<UsuarioDTO> ObtenerUsuarioPorLegajo(int legajo);
         public Task<IEnumerable<UsuarioDTO>> ObtenerTodosLosUsuarios();
         public Task<UsuarioDTO> ObtenerUsuarioPorDni(int dni);
-        public Task<int> InsertarRegistrarseEnUsuario(CrearUsuarioDTO login,IDbConnection db);
-        public Task <CrearUsuarioDTOResponse> RegistrarUsuario(CrearUsuarioDTO user,HttpContext http);
-        public Task<CambiarDatosUsuarioDTO> CambiarDatosUsuario (CambiarDatosUsuarioDTO user);
+        public Task<int> InsertarRegistrarseEnUsuario(CrearUsuarioDTO login, IDbConnection db);
+        public Task<CrearUsuarioDTOResponse> RegistrarUsuario(CrearUsuarioDTO user, HttpContext http);
+        public Task<CambiarDatosUsuarioDTO> CambiarDatosUsuario(CambiarDatosUsuarioDTO user);
         public string GetHeadersLegajo(HttpContext http);
+        public Task<UsuarioBajaDTO> DarDeBajaLogicaUsuario(UsuarioBajaDTO usuario);
+        public Task<int> DarDeBajaUsuarioLogin(UsuarioDTO usuario, IDbConnection db);
+        public Task<int> DarDeBajaUsuario(UsuarioDTO usuario, IDbConnection db);
+
     }
 
     public class Usuario : IUsuario
@@ -64,9 +69,9 @@ namespace UserManager.Repositorios
 
             dp.Add("user", dni, DbType.Int64);
 
-            UsuarioDTO user =await db.QueryFirstOrDefaultAsync<UsuarioDTO>(query, dp);
+            UsuarioDTO user = await db.QueryFirstOrDefaultAsync<UsuarioDTO>(query, dp);
 
-            if(user == null)
+            if (user == null)
             {
                 throw new Exception("Error, el usuario no existe");
             }
@@ -85,7 +90,7 @@ namespace UserManager.Repositorios
 
             IEnumerable<UsuarioDTO> listaUsuario = await db.QueryAsync<UsuarioDTO>(query).ConfigureAwait(false);
 
-            if (listaUsuario==null)
+            if (listaUsuario == null)
             {
                 throw new Exception("Error al traer los usuarios");
             }
@@ -99,9 +104,9 @@ namespace UserManager.Repositorios
         /// <param name="login"></param>
         /// <param name="db"></param>
         /// <returns></returns>
-        public async Task <int> InsertarRegistrarseEnUsuario (CrearUsuarioDTO login, IDbConnection db)
+        public async Task<int> InsertarRegistrarseEnUsuario(CrearUsuarioDTO login, IDbConnection db)
         {
-            LoginDTO legajo = await _login.ObtenerUsuarioLogin(login.Usuario,db);
+            LoginDTO legajo = await _login.ObtenerUsuarioLogin(login.Usuario, db);
 
             string query = $@"INSERT INTO T_USUARIO (LEGAJO,NOMBRE,MAIL,ROL,ACTIVO) VALUES (@legajo, @nombre, @mail, @rol,@activo)";
 
@@ -129,7 +134,7 @@ namespace UserManager.Repositorios
         /// /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        public async Task <CrearUsuarioDTOResponse> RegistrarUsuario(CrearUsuarioDTO user,HttpContext http)
+        public async Task<CrearUsuarioDTOResponse> RegistrarUsuario(CrearUsuarioDTO user, HttpContext http)
         {
             int row = 0;
             using IDbConnection db = new MySqlConnection(_config.GetConnectionString("DefaultConnection"));
@@ -141,29 +146,29 @@ namespace UserManager.Repositorios
 
             if (usuarioExiste != null)
             {
-                throw new Exception ($"Error el usuario ya existe");
+                throw new Exception($"Error el usuario ya existe");
             }
-            CrearUsuarioDTO usuarioCreado = await _login.CrearUsuarioSeguridad(user,db);
+            CrearUsuarioDTO usuarioCreado = await _login.CrearUsuarioSeguridad(user, db);
 
             if (usuarioCreado == null)
             {
-                throw new Exception ($"Error al crear el usuario");
+                throw new Exception($"Error al crear el usuario");
             }
             string legajoQuienRealizaAccion = this.GetHeadersLegajo(http);
 
-            row = await this.InsertarRegistrarseEnUsuario(usuarioCreado,db);
+            row = await this.InsertarRegistrarseEnUsuario(usuarioCreado, db);
 
-            int rowEvento = await _eventos.InsertarEventoRegistrarUsuario(user,legajoQuienRealizaAccion,db);
+            int rowEvento = await _eventos.InsertarEventoRegistrarUsuario(user, legajoQuienRealizaAccion, db, http);
 
-            if(row==0 && rowEvento == 0)
+            if (row == 0 && rowEvento == 0)
             {
                 transaccion.Rollback();
                 throw new Exception($"Error Al Insertar el evento");
             }
             transaccion.Commit();
 
-            CrearUsuarioDTOResponse userResponse = new CrearUsuarioDTOResponse{Usuario = usuarioCreado.Usuario, Nombre = usuarioCreado.Nombre, Mail= usuarioCreado.Mail};
-            return userResponse ;
+            CrearUsuarioDTOResponse userResponse = new CrearUsuarioDTOResponse { Usuario = usuarioCreado.Usuario, Nombre = usuarioCreado.Nombre, Mail = usuarioCreado.Mail };
+            return userResponse;
 
         }
 
@@ -173,20 +178,20 @@ namespace UserManager.Repositorios
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        public async Task<CambiarDatosUsuarioDTO> CambiarDatosUsuario (CambiarDatosUsuarioDTO user)
+        public async Task<CambiarDatosUsuarioDTO> CambiarDatosUsuario(CambiarDatosUsuarioDTO user)
         {
-            if(user==null)
+            if (user == null)
             {
                 throw new System.Exception("Error usuario es nulo");
             }
 
             UsuarioDTO userLegajo = await this.ObtenerUsuarioPorLegajo(user.Legajo);
 
-            if(userLegajo==null)
+            if (userLegajo == null)
             {
                 throw new System.Exception("Error El usuario No existe");
             }
-            
+
             using IDbConnection db = new MySqlConnection(_config.GetConnectionString("DefaultConnection"));
             if (db.State is ConnectionState.Closed) db.Open();
             using IDbTransaction transaccion = db.BeginTransaction();
@@ -195,21 +200,25 @@ namespace UserManager.Repositorios
 
             DynamicParameters dp = new DynamicParameters();
 
-            dp.Add("nombre",user.Nombre,DbType.String);
-            dp.Add("telefono",user.Telefono,DbType.String);
-            dp.Add("direccion",user.Direccion,DbType.String);
-            dp.Add("dni",user.Dni,DbType.String);
-            dp.Add("legajo",user.Legajo,DbType.Int16);
+            dp.Add("nombre", user.Nombre, DbType.String);
+            dp.Add("telefono", user.Telefono, DbType.String);
+            dp.Add("direccion", user.Direccion, DbType.String);
+            dp.Add("dni", user.Dni, DbType.String);
+            dp.Add("legajo", user.Legajo, DbType.Int16);
 
-            int row = await db.ExecuteAsync(sql,dp);
-            if(row<=0)
+            int row = await db.ExecuteAsync(sql, dp);
+            if (row <= 0)
             {
                 throw new Exception("Error al cambiar datos del usuario");
             }
             transaccion.Commit();
             return user;
         }
-
+        /// <summary>
+        /// Se obtiene el header para tener registro de que usuario esta haciendo la peticion 
+        /// </summary>
+        /// <param name="http"></param>
+        /// <returns></returns>
         public string GetHeadersLegajo(HttpContext http)
         {
             string test = http.Request.Headers.Authorization;
@@ -220,14 +229,105 @@ namespace UserManager.Repositorios
             string nombre = tokenLectura.Claims.Where(x => x.Type == "USUARIO").Select(c => c.Value).SingleOrDefault();
             string legajo = tokenLectura.Claims.Where(x => x.Type == "LEGAJO").Select(c => c.Value).SingleOrDefault();
 
-
             return nombre;
-
-             
         }
 
+        /// <summary>
+        /// Se da de baja al usuario poneniendo en activo 0, en t_usuario y t_usuario_login
+        /// </summary>
+        /// <param name="usuario"></param>
+        /// <returns></returns>
+        public async Task<UsuarioBajaDTO> DarDeBajaLogicaUsuario(UsuarioBajaDTO usuario)
+        {
+            if (usuario == null)
+            {
+                throw new Exception("El usuario es nullo");
+            }
 
+            UsuarioDTO usuarioExiste = await this.ObtenerUsuarioPorLegajo(usuario.Legajo);
 
+            if (usuarioExiste == null)
+            {
+                throw new Exception("El usuario no existe");
+            }
+
+            using IDbConnection db = new MySqlConnection(_config.GetConnectionString("DefaultConnection"));
+            if (db.State is ConnectionState.Closed) db.Open();
+            using IDbTransaction transaccion = db.BeginTransaction();
+
+            int cambiosUsuarioLogin = await this.DarDeBajaUsuarioLogin(usuarioExiste, db);
+            int cambiosUsuario = await this.DarDeBajaUsuario(usuarioExiste, db);
+            if(cambiosUsuario > 1 && cambiosUsuarioLogin > 1)
+            {
+                transaccion.Rollback();
+                throw new Exception("Error al realizar la baja logica");
+            }
+
+            transaccion.Commit();
+            return usuario;
+        }
+
+        /// <summary>
+        /// Se da de baja en la tabla t_usuario poniendolo en activo 0
+        /// </summary>
+        /// <param name="usuario"></param>
+        /// <param name="db"></param>
+        /// <returns></returns>
+        public async Task<int> DarDeBajaUsuario(UsuarioDTO usuario, IDbConnection db)
+        {
+            if (usuario == null)
+            {
+                throw new Exception("Usuario es nullo");
+            }
+
+            string sql = @$"UPDATE T_USUARIO SET ACTIVO = @baja WHERE LEGAJO = @legajo ";
+
+            DynamicParameters dp = new DynamicParameters();
+            dp.Add("baja", TipoEstado.Baja, DbType.Int16);
+            dp.Add("legajo", usuario.Legajo, DbType.Int32);
+
+            int row = await db.ExecuteAsync(sql, dp);
+            if (row == 0)
+            {
+                throw new Exception("No se logro realizar la baja");
+            }
+            if (row > 1)
+            {
+                throw new Exception("Error se realizo mas de 2 registros");
+            }
+            return row;
+        }
+
+        /// <summary>
+        /// Se da de baja en la tabla t_usuario_login poniendolo en activo 0
+        /// </summary>
+        /// <param name="usuario"></param>
+        /// <param name="db"></param>
+        /// <returns></returns>
+        public async Task<int> DarDeBajaUsuarioLogin(UsuarioDTO usuario, IDbConnection db)
+        {
+            if (usuario == null)
+            {
+                throw new Exception("Usuario es nullo");
+            }
+
+            string sql = @$"UPDATE T_USUARIO_LOGIN SET ACTIVO = @baja WHERE LEGAJO = @legajo ";
+
+            DynamicParameters dp = new DynamicParameters();
+            dp.Add("baja", TipoEstado.Baja, DbType.Int16);
+            dp.Add("legajo", usuario.Legajo, DbType.Int32);
+
+            int row = await db.ExecuteAsync(sql, dp);
+            if (row == 0)
+            {
+                throw new Exception("No se logro realizar la baja");
+            }
+            if (row > 1)
+            {
+                throw new Exception("Error se realizo mas de 2 registros");
+            }
+            return row;
+        }
 
     }
 }
