@@ -22,22 +22,27 @@ namespace UserManager.Controllers
         }
 
 
-
+        /// <summary>
+        /// Se obtiene en la tabla t_eventos los datos dependiendo el id que se manda
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("ObtenerEventosPorId/{id}")]
         public async Task<IActionResult> ObtenerEventosPorId(int id)
         {
             try
             {
                 IEnumerable<EventoDTO> eventos = await _eventos.ObtenerEventosPorIdEvento(id);
-                return Ok(new HttpResponseOk {data = eventos} );
+                return Ok(new HttpResponseOk { data = eventos });
             }
             catch (System.Exception e)
             {
-                
+
                 return BadRequest(new HttpBadResponse(e));
             }
-            
+
 
         }
+        
     }
 }
