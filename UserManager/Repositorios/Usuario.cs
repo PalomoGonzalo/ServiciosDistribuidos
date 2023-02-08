@@ -22,13 +22,13 @@ namespace UserManager.Repositorios
         public Task<int> DarDeBajaUsuarioLogin(UsuarioDTO usuario, IDbConnection db);
         public Task<int> DarDeBajaUsuario(UsuarioDTO usuario, IDbConnection db);
 
+
     }
 
     public class Usuario : IUsuario
     {
         private readonly IConfiguration _config;
         private readonly ILogin _login;
-
         private readonly IEventos _eventos;
 
 
@@ -328,6 +328,9 @@ namespace UserManager.Repositorios
             }
             return row;
         }
+
+
+
 
     }
 }

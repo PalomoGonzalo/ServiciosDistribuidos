@@ -20,13 +20,14 @@ namespace UserManager.Repositorios
     public class Eventos : IEventos
     {
         private readonly IConfiguration _config;
-
         private readonly IMapper _maper;
+        private readonly ICliente _cliente;
 
-        public Eventos(IConfiguration config, IMapper maper = null)
+        public Eventos(IConfiguration config, IMapper maper, ICliente cliente)
         {
             _config = config;
             _maper = maper;
+            _cliente = cliente;
         }
 
         /// <summary>
@@ -42,7 +43,7 @@ namespace UserManager.Repositorios
 
             string usuario2 = JsonConvert.SerializeObject(userioEvento);
 
-            string userIP = http.Connection.RemoteIpAddress.ToString();
+            string userIP = _cliente.ObtenerIpCliente(http);
 
             string sql = $@"INSERT INTO T_EVENTOS (ID_EVENTO, EVENTONOMBRE, USUARIO, DATO, IP) VALUES (@id_evento,@eventonombre,@usuario,@dato,@ip)";
 
