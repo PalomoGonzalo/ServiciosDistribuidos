@@ -113,8 +113,8 @@ namespace UserManager.Controllers
                 Password = legajo
             };
             */
-
-            var test2 = HttpContext.Connection.LocalIpAddress.ToString();
+            
+            var test2 =  DateTime.Now;
             return Ok(test2);
 
              

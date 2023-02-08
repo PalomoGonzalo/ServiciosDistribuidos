@@ -18,6 +18,8 @@ namespace UserManager.Helpers
             try
             {
                 string userIP = http.Connection.RemoteIpAddress.ToString();
+
+                var test = http.Connection.LocalIpAddress.ToString();
                 userIP = userIP.Replace("::ffff:", "");
                 return userIP;
             }
