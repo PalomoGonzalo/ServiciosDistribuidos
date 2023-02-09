@@ -88,7 +88,7 @@ namespace UserManager.Repositorios
 
             var passHash = _passwordHash.Hash(user.Password);
 
-            string sql = @"INSERT INTO T_USUARIO_LOGIN (USUARIO,NOMBRE,PASSWORD,MAIL,ACTIVO) VALUES (@usuario,@nombre,@contraseña,@mail,@activo)";
+            string sql = @$"INSERT INTO T_USUARIO_LOGIN (USUARIO,NOMBRE,PASSWORD,MAIL,ACTIVO) VALUES (@usuario,@nombre,@contraseña,@mail,@activo)";
 
             DynamicParameters dp = new DynamicParameters();
             dp.Add("usuario", user.Usuario, DbType.String);

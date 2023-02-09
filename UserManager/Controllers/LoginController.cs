@@ -100,7 +100,7 @@ namespace UserManager.Controllers
         
         public IActionResult GetHeaders()
         {
-           /* string test = Request.Headers.Authorization;
+            string test = Request.Headers.Authorization;
             string[] strlist = test.Split("Bearer ", StringSplitOptions.RemoveEmptyEntries);
             test = String.Join("", strlist);
 
@@ -113,12 +113,8 @@ namespace UserManager.Controllers
                 Usuario = nombre,
                 Password = legajo
             };
-            */
-            
-            DateTime test2 = DateTime.Now;
-            var fechaParseada = DateTime.ParseExact(test2.ToString(@"yyyy-MM-dd HH:mm:ss"), @"yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-            //var test = fechaParseada.ToLongDateString();
-            return Ok(fechaParseada.ToString("yyyy-MM-dd HH:mm:ss"));
+
+            return Ok (user);
 
         }
         /// <summary>

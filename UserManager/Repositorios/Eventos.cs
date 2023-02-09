@@ -45,7 +45,9 @@ namespace UserManager.Repositorios
 
             string userIP = _cliente.ObtenerIpCliente(http);
 
-            string sql = $@"INSERT INTO T_EVENTOS (ID_EVENTO, EVENTONOMBRE, USUARIO, DATO, IP) VALUES (@id_evento,@eventonombre,@usuario,@dato,@ip)";
+            string dateTimeStamp = _cliente.ObtenerDateTimeNowFormatoTimeStamp();
+
+            string sql = $@"INSERT INTO T_EVENTOS (ID_EVENTO, EVENTONOMBRE, USUARIO, DATO, FECHA_CREACION, IP) VALUES (@id_evento,@eventonombre,@usuario,@dato,@fecha,@ip)";
 
             DynamicParameters dp = new DynamicParameters();
 
@@ -53,6 +55,7 @@ namespace UserManager.Repositorios
             dp.Add("eventonombre", "RegitrarUsuario", DbType.String);
             dp.Add("usuario", usuarioQuienRealiza, DbType.String);
             dp.Add("dato", usuario2, DbType.String);
+            dp.Add("fecha",dateTimeStamp,DbType.String);
             dp.Add("ip",userIP,DbType.String);
 
             int row = await db.ExecuteAsync(sql, dp);

@@ -37,7 +37,6 @@ namespace UserManager.Controllers
             }
             catch (System.Exception e)
             {
-
                 return BadRequest(new HttpBadResponse(e));
             }
 
