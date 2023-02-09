@@ -18,19 +18,21 @@ namespace UserManager.Repositorios
         public Task<LoginDTO> ObtenerUsuarioLogin(string user, IDbConnection db);
         public Task<LoginDTO> ObtenerUsuarioLoginDB(string user);
         public Task<Boolean> CambiarContraseña(CambiarContraseñaDTO contraseñaDTO);
-        public Task<Boolean> CambiarContraseñaForzada(CambiarContraseñaDTO contraseñaDTO);
-
+        public Task<Boolean> CambiarContraseñaForzada(CambiarContraseñaForzadaDTO contraseñaDTO);
     }
 
     public class Login : ILogin
     {
         private readonly IConfiguration _config;
         private readonly IPasswordHasherRepositorio _passwordHash;
+        private readonly IEventos _evento;
+        
 
-        public Login(IConfiguration config, IPasswordHasherRepositorio passwordHash)
+        public Login(IConfiguration config, IPasswordHasherRepositorio passwordHash, IEventos evento)
         {
             _config = config;
             _passwordHash = passwordHash;
+            _evento = evento;
         }
 
         /// <summary>
@@ -172,13 +174,18 @@ namespace UserManager.Repositorios
             {
                 throw new Exception("Error la contraseña no coinciden");
             }
-            
+
             return true;
         }
-
-        public async Task<Boolean> CambiarContraseñaForzada(CambiarContraseñaDTO contraseñaDTO)
+        /// <summary>
+        /// Se cambia de contraseña sin ningun tipo de validacion 
+        /// </summary>
+        /// <param name="contraseñaDTO"></param>
+        /// <returns></returns>
+        public async Task<Boolean> CambiarContraseñaForzada(CambiarContraseñaForzadaDTO contraseñaDTO)
         {
-            
+            try
+            {
                 string passHasheada = _passwordHash.Hash(contraseñaDTO.PasswordNueva);
 
                 using IDbConnection db = new MySqlConnection(_config.GetConnectionString("DefaultConnection"));
@@ -193,12 +200,27 @@ namespace UserManager.Repositorios
                 dp.Add("contraseña", passHasheada, DbType.String);
                 dp.Add("legajo", contraseñaDTO.Legajo, DbType.Int32);
                 int row = await db.ExecuteAsync(sql, dp);
-                if (row <= 0)
+
+                EventoCambiarContraseñaDTO eventoUser = new EventoCambiarContraseñaDTO{
+                    Legajo = contraseñaDTO.Legajo
+                };
+
+                int rowEvento = await _evento.InsertarEvento(eventoUser,db,"CambiarContraseñaForzada",((int)Types.EnumsLib.EventosEstados.EventoCambiarContraseñaForzada));
+                if (row <= 0 && rowEvento <= 0) 
                 {
-                    throw new Exception("Error al cambiar la contraseña, legajo no coinciden");
+                    transaccion.Rollback();
+                    throw new Exception("Error al cambiar la contraseña");
                 }
-                transaccion.Commit();     
-            return true;
+
+                transaccion.Commit();
+                return true;
+
+            }
+            catch (System.Exception ex)
+            {
+
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

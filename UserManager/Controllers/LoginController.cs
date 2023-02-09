@@ -79,7 +79,7 @@ namespace UserManager.Controllers
         /// <returns></returns>
 
         [HttpGet("Headers")]
-        
+        [Authorize]
         public ActionResult<Dictionary<string, string>> GetAllHeaders()
         {
             Dictionary<string, string> requestHeaders =
@@ -97,7 +97,7 @@ namespace UserManager.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("Header")]
-        
+        [Authorize]
         public IActionResult GetHeaders()
         {
             string test = Request.Headers.Authorization;
@@ -143,9 +143,10 @@ namespace UserManager.Controllers
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-
+        
         [HttpPut("CambiarContraseñaForzada")]
-        public async Task<IActionResult> CambiarContraseñaForzada([FromBody] CambiarContraseñaDTO user)
+        [Authorize]
+        public async Task<IActionResult> CambiarContraseñaForzada([FromBody] CambiarContraseñaForzadaDTO user)
         {
             try
             {

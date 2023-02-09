@@ -22,5 +22,8 @@ namespace UserManager.Helpers
             userEvento.Usuario = user.Usuario;
             return userEvento;
         }
+
+
+        
     }
 }

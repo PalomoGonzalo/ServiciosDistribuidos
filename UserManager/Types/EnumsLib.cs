@@ -17,6 +17,7 @@ namespace UserManager.Types
         {
             EventoReprogramado = 1,
             EventoBajaLogica = 2, 
+            EventoCambiarContraseñaForzada = 3,
 
         }
 
