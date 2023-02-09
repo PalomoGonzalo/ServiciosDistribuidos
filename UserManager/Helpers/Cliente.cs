@@ -8,20 +8,23 @@ namespace UserManager.Helpers
 {
     public interface ICliente
     {
-        public string ObtenerIpCliente(HttpContext http);
+        public string ObtenerIpCliente(IHttpContextAccessor http);
         public string ObtenerDateTimeNowFormatoTimeStamp();
     }
 
 
     public class Cliente : ICliente
     {
-        public string ObtenerIpCliente(HttpContext http)
+        /// <summary>
+        /// Se obtiene la ip del http, sacando las letras
+        /// </summary>
+        /// <param name="http"></param>
+        /// <returns></returns>
+        public string ObtenerIpCliente(IHttpContextAccessor http)
         {
             try
             {
-                string userIP = http.Connection.RemoteIpAddress.ToString();
-
-                var test = http.Connection.LocalIpAddress.ToString();
+                string userIP = http.HttpContext.Connection.RemoteIpAddress.ToString();
                 userIP = userIP.Replace("::ffff:", "");
                 return userIP;
             }

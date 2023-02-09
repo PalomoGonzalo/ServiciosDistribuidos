@@ -92,6 +92,7 @@ builder.Services.AddScoped<IUsuario, Usuario>();
 builder.Services.AddScoped<IEventos, Eventos>();
 builder.Services.AddScoped<IMapper,Mapper>();
 builder.Services.AddScoped<ICliente,Cliente>();
+builder.Services.AddHttpContextAccessor();
 
 
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Dynamic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
@@ -14,7 +15,7 @@ namespace UserManager.Repositorios
 
     public interface IEventos
     {
-        Task<int> InsertarEventoRegistrarUsuario(CrearUsuarioDTO user, string usuarioQuienRealiza, IDbConnection db,HttpContext http);
+        Task<int> InsertarEvento(object user, string usuarioQuienRealiza, IDbConnection db,IHttpContextAccessor http,string eventoNombre,int idEvento);
         public Task<IEnumerable<EventoDTO>> ObtenerEventosPorIdEvento(int idEvento);
     }
     public class Eventos : IEventos
@@ -37,11 +38,10 @@ namespace UserManager.Repositorios
         /// <param name="usuarioQuienRealiza"></param>
         /// <param name="db"></param>
         /// <returns></returns>
-        public async Task<int> InsertarEventoRegistrarUsuario(CrearUsuarioDTO user, string usuarioQuienRealiza, IDbConnection db,HttpContext http)
+        public async Task<int> InsertarEvento(object user, string usuarioQuienRealiza, IDbConnection db,IHttpContextAccessor http, string eventoNombre,int idEvento)
         {
-            EventoRegistrarUsuarioDTO userioEvento = _maper.MapCrearUsuarioAEventoRegistrarUsuario(user);
-
-            string usuario2 = JsonConvert.SerializeObject(userioEvento);
+            
+            string usuarioObject = JsonConvert.SerializeObject(user);
 
             string userIP = _cliente.ObtenerIpCliente(http);
 
@@ -51,10 +51,10 @@ namespace UserManager.Repositorios
 
             DynamicParameters dp = new DynamicParameters();
 
-            dp.Add("id_evento", 1, DbType.Int16);
-            dp.Add("eventonombre", "RegitrarUsuario", DbType.String);
+            dp.Add("id_evento", idEvento, DbType.Int16);
+            dp.Add("eventonombre", eventoNombre, DbType.String);
             dp.Add("usuario", usuarioQuienRealiza, DbType.String);
-            dp.Add("dato", usuario2, DbType.String);
+            dp.Add("dato", usuarioObject, DbType.String);
             dp.Add("fecha",dateTimeStamp,DbType.String);
             dp.Add("ip",userIP,DbType.String);
 
@@ -88,7 +88,7 @@ namespace UserManager.Repositorios
             foreach (var item in eventos)
             {
                 if(item.Dato != null)
-                    item.DatoUsuario = JsonConvert.DeserializeObject<EventoRegistrarUsuarioDTO>(item.Dato);
+                    item.DatoUsuario = JsonConvert.DeserializeObject<ExpandoObject>(item.Dato);
             }
             
             return eventos;

@@ -63,7 +63,7 @@ namespace UserManager.Controllers
         {
             try
             {
-                CrearUsuarioDTOResponse usuario = await _usuario.RegistrarUsuario(user,this.HttpContext);
+                CrearUsuarioDTOResponse usuario = await _usuario.RegistrarUsuario(user);
                 return Ok(new HttpResponseOk { data = usuario, msg = "Se creo correctamente el usuario" });
 
             }

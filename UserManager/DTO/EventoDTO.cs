@@ -15,6 +15,6 @@ namespace UserManager.DTO
         [JsonIgnore]
         public string Dato { get; set; }
         public DateTime Fecha_Creacion { get; set; }
-        public EventoRegistrarUsuarioDTO DatoUsuario { get; set;}
+        public dynamic DatoUsuario { get; set;}
     }
 }

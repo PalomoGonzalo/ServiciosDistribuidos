@@ -12,5 +12,14 @@ namespace UserManager.Types
             Activo = 1,
             Baja = 0,
         }
+
+        public enum EventosEstados
+        {
+            EventoReprogramado = 1,
+            EventoBajaLogica = 2, 
+
+        }
+
+
     }
 }

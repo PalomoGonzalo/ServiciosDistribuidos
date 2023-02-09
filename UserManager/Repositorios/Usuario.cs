@@ -5,6 +5,8 @@ using MySql.Data.MySqlClient;
 using UserManager.DTO;
 using System.IdentityModel.Tokens.Jwt;
 using static UserManager.Types.EnumsLib;
+using UserManager.Helpers;
+using UserManager.Types;
 
 namespace UserManager.Repositorios
 {
@@ -15,9 +17,9 @@ namespace UserManager.Repositorios
         public Task<IEnumerable<UsuarioDTO>> ObtenerTodosLosUsuarios();
         public Task<UsuarioDTO> ObtenerUsuarioPorDni(int dni);
         public Task<int> InsertarRegistrarseEnUsuario(CrearUsuarioDTO login, IDbConnection db);
-        public Task<CrearUsuarioDTOResponse> RegistrarUsuario(CrearUsuarioDTO user, HttpContext http);
+        public Task<CrearUsuarioDTOResponse> RegistrarUsuario(CrearUsuarioDTO user);
         public Task<CambiarDatosUsuarioDTO> CambiarDatosUsuario(CambiarDatosUsuarioDTO user);
-        public string GetHeadersLegajo(HttpContext http);
+        public string GetHeadersLegajo(IHttpContextAccessor http);
         public Task<UsuarioBajaDTO> DarDeBajaLogicaUsuario(UsuarioBajaDTO usuario);
         public Task<int> DarDeBajaUsuarioLogin(UsuarioDTO usuario, IDbConnection db);
         public Task<int> DarDeBajaUsuario(UsuarioDTO usuario, IDbConnection db);
@@ -30,13 +32,21 @@ namespace UserManager.Repositorios
         private readonly IConfiguration _config;
         private readonly ILogin _login;
         private readonly IEventos _eventos;
+        private readonly ICliente _cliente;
+
+        private readonly IHttpContextAccessor http;
+
+        private readonly IMapper _mapper;
 
 
-        public Usuario(IConfiguration config, ILogin login, IEventos eventos = null)
+        public Usuario(IConfiguration config, ILogin login, IEventos eventos = null, IMapper mapper = null, ICliente cliente = null, IHttpContextAccessor htpp = null)
         {
             _config = config;
             _login = login;
             _eventos = eventos;
+            _mapper = mapper;
+            _cliente = cliente;
+            this.http = htpp;
         }
         /// <summary>
         /// Se obtiene usuario por legajo
@@ -134,7 +144,7 @@ namespace UserManager.Repositorios
         /// /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        public async Task<CrearUsuarioDTOResponse> RegistrarUsuario(CrearUsuarioDTO user, HttpContext http)
+        public async Task<CrearUsuarioDTOResponse> RegistrarUsuario(CrearUsuarioDTO user)
         {
             int row = 0;
             using IDbConnection db = new MySqlConnection(_config.GetConnectionString("DefaultConnection"));
@@ -157,8 +167,11 @@ namespace UserManager.Repositorios
             string legajoQuienRealizaAccion = this.GetHeadersLegajo(http);
 
             row = await this.InsertarRegistrarseEnUsuario(usuarioCreado, db);
+            
+            EventoRegistrarUsuarioDTO userioEvento = _mapper.MapCrearUsuarioAEventoRegistrarUsuario(user);
 
-            int rowEvento = await _eventos.InsertarEventoRegistrarUsuario(user, legajoQuienRealizaAccion, db, http);
+
+            int rowEvento = await _eventos.InsertarEvento(userioEvento, legajoQuienRealizaAccion, db, http,"RegitrarUsuario",((int)EnumsLib.EventosEstados.EventoReprogramado));
 
             if (row == 0 && rowEvento == 0)
             {
@@ -219,9 +232,10 @@ namespace UserManager.Repositorios
         /// </summary>
         /// <param name="http"></param>
         /// <returns></returns>
-        public string GetHeadersLegajo(HttpContext http)
+        public string GetHeadersLegajo(IHttpContextAccessor http)
         {
-            string test = http.Request.Headers.Authorization;
+           
+            string test = http.HttpContext.Request.Headers.Authorization;
             string[] strlist = test.Split("Bearer ", StringSplitOptions.RemoveEmptyEntries);
             test = String.Join("", strlist);
 
@@ -257,6 +271,10 @@ namespace UserManager.Repositorios
 
             int cambiosUsuarioLogin = await this.DarDeBajaUsuarioLogin(usuarioExiste, db);
             int cambiosUsuario = await this.DarDeBajaUsuario(usuarioExiste, db);
+
+
+            int rowEvento = await _eventos.InsertarEvento(usuarioExiste,this.GetHeadersLegajo(http),db,http,"DarDeBajaLogicaUsuario",((int)Types.EnumsLib.EventosEstados.EventoBajaLogica));
+
             if(cambiosUsuario > 1 && cambiosUsuarioLogin > 1)
             {
                 transaccion.Rollback();
