@@ -1,6 +1,6 @@
 Este proyecto se centra en varias aplicaciones que todos se comunican entre si,
 
-Hasta el momomento se encuentra el UserManager que es el servicio que se encarga el tema de logueo y altas de usuarios, perfiles.
+Hasta el momento se encuentra el UserManager que es el servicio que se encarga el tema de logueo y altas de usuarios, perfiles.
 Actualmente se encuentra online http://89.117.32.214:5025/swagger/index.html.
 Para poder utilizar los endpoints se necesita tener el jwt que se obtiene al loguear 
 
