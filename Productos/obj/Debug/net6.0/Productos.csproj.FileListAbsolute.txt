@@ -61,3 +61,4 @@ C:\Users\153131\Desktop\ServiciosDistribuidos\ServiciosDistribuidos\Productos\ob
 C:\Users\153131\Desktop\ServiciosDistribuidos\ServiciosDistribuidos\Productos\obj\Debug\net6.0\Productos.pdb
 C:\Users\153131\Desktop\ServiciosDistribuidos\ServiciosDistribuidos\Productos\obj\Debug\net6.0\Productos.genruntimeconfig.cache
 C:\Users\153131\Desktop\ServiciosDistribuidos\ServiciosDistribuidos\Productos\obj\Debug\net6.0\ref\Productos.dll
+C:\Users\153131\Desktop\ServiciosDistribuidos\ServiciosDistribuidos\Productos\bin\Debug\net6.0\Newtonsoft.Json.dll

@@ -2,6 +2,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Productos.Repositorios;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -75,11 +76,7 @@ builder.Services.AddAuthentication(options =>
 });
 
 
-//var section = builder.Configuration.GetSection("PassOptions");
-
-//builder.Services.Configure<PassOptions>(section);
-
-
+builder.Services.AddScoped<IProductos,Producto>();
 
 var app = builder.Build();
 

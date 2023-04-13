@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 using Productos.DTOS;
+using Productos.Repositorios;
+using Productos.Types;
 
 namespace Productos.Controllers
 {
@@ -16,24 +18,31 @@ namespace Productos.Controllers
     public class ProductoController : Controller
     {   
 
-        private readonly IConfiguration _config;
+        private readonly IProductos _productos;
 
-        public ProductoController(IConfiguration config)
+        public ProductoController(IProductos productos)
         {
-            _config = config;
+            _productos = productos;
         }
 
-        [HttpGet("ObtenerProductos")]
-        public async Task<IActionResult> ObtenerCategoria()
+        [HttpGet("ObtenerProductosPorPaginacion/{nroDePagina}")]
+        public async Task<IActionResult> ObtenerProductosPorPaginacion(int nroDePagina)
         {
-            using IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            
-            string sql  = $@"SELECT * FROM Productos";
+            try
+            {
+                IEnumerable<ProductosPaginacioDTO> listaProductos = await _productos.ObtenerTodosLosProductosPorPagina(nroDePagina);
 
-            IEnumerable<ProductoDTO> listarCategoria = await db.QueryAsync<ProductoDTO>(sql).ConfigureAwait(false);
-            
-            return Ok(listarCategoria);
+                if(listaProductos is null)
+                {
+                    return NotFound(new HttpBadResponse("No hay datos en esta pagina"));
+                }
 
+                return Ok(new HttpResponseOk{data = listaProductos});   
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(new HttpBadResponse(ex));
+            }
         }
  
     }

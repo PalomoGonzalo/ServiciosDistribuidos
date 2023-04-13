@@ -14,5 +14,6 @@ namespace Productos.DTOS
         public int CategoriaID { get; set; }
         public DateTime Fecha_Creacion { get; set; }
         public DateTime Fecha_modificacion { get; set; }
+        
     }
 }
