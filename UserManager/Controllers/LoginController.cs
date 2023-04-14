@@ -8,6 +8,7 @@ using UserManager.Repositorios;
 using UserManager.Types;
 using Microsoft.AspNetCore.Authorization;
 using System.Globalization;
+using System;
 
 namespace UserManager.Controllers
 {
@@ -79,18 +80,12 @@ namespace UserManager.Controllers
         /// <returns></returns>
 
         [HttpGet("Headers")]
-        [Authorize]
-        public ActionResult<Dictionary<string, string>> GetAllHeaders()
+        public IActionResult GetAllHeaders()
         {
-            Dictionary<string, string> requestHeaders =
-               new Dictionary<string, string>();
-            foreach (var header in Request.Headers)
-            {
-                requestHeaders.Add(header.Key, header.Value);
-            }
+           
+            var date = DateTime.Now;
             
-            
-            return requestHeaders;
+            return Ok(date);
         }
         /// <summary>
         /// prubeas de headers con los tokens
