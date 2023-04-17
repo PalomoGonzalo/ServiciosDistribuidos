@@ -44,6 +44,24 @@ namespace Productos.Controllers
                 return BadRequest(new HttpBadResponse(ex));
             }
         }
+
+        [HttpGet("ObtenerProductoPorId/{id}")]
+        public async Task<IActionResult> ObtenerProductoPorId(int id)
+        {
+            try
+            {
+                throw Exception;
+            }
+            catch (System.Exception)
+            {
+                
+                throw;
+            }
+
+
+
+
+        }
  
     }
 }
