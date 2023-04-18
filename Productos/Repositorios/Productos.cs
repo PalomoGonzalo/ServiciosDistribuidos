@@ -15,6 +15,7 @@ namespace Productos.Repositorios
         Task<IEnumerable<ProductosPaginacioDTO>> ObtenerTodosLosProductosPorPagina(int nroPagina);
         Task<int> ObtenerCantidadDeRegistrosPaginacion(IDbConnection db);
         Task<ProductoDTO> ObtenerProductoPorId(int id);
+        Task<ProductoEliminarDTO> ObtenerProductoPorId(int id,IDbConnection db);
         Task<IEnumerable<ProductoDTO>> ObtenerProductosPorNombre(string nombre);
         
     }
@@ -93,6 +94,24 @@ namespace Productos.Repositorios
         }
 
 
+
+        public async Task<ProductoEliminarDTO> ObtenerProductoPorId(int id,IDbConnection db)
+        {
+            string sql = $"SELECT * FROM PRODUCTOS WHERE ID_PRODUCTO = @ID";
+            DynamicParameters dp = new DynamicParameters();
+            dp.Add("ID",id,DbType.Int32);
+
+            ProductoEliminarDTO producto = await db.QueryFirstOrDefaultAsync<ProductoEliminarDTO>(sql,dp).ConfigureAwait(false);
+
+            if(producto == null)
+            {
+                throw new Exception("El producto no existe");
+            }
+
+            return producto;
+        }
+
+
         /// <summary>
         /// Se obtiene lista de productos por nombre 
         /// </summary>
@@ -107,15 +126,46 @@ namespace Productos.Repositorios
             DynamicParameters dp = new DynamicParameters();
             dp.Add("test",nombre,DbType.String);
             
-
             IEnumerable<ProductoDTO> productosConNombre = await db.QueryAsync<ProductoDTO>(sql,dp).ConfigureAwait(false);
 
-            if(productosConNombre == null)
+            if(productosConNombre.Count() == 0)
             {
                 throw new Exception("No existe productos con ese nombre");
             }
 
             return productosConNombre;
+        }
+
+
+        public async Task<int> DarDeBajaProductoLogico(int idProducto)
+        {
+            
+            using IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+            if (db.State is ConnectionState.Closed) db.Open();
+
+
+            ProductoEliminarDTO productoAEliminar = await this.ObtenerProductoPorId(idProducto,db);
+
+            if(productoAEliminar==null)
+            {
+                throw new Exception("Error en la cosnulta de producto");
+            }
+
+            if()
+            using IDbTransaction transaccion = db.BeginTransaction();
+
+
+        }
+
+
+        public async Task<int> DarDeBajaProductoLogico(ProductoDTO idProducto, IDbConnection db)
+        {
+            
+
+
+
+
+
         }
     }
 }
