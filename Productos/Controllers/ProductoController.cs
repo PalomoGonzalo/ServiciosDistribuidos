@@ -50,17 +50,29 @@ namespace Productos.Controllers
         {
             try
             {
-                throw Exception;
+                ProductoDTO producto = await _productos.ObtenerProductoPorId(id);
+
+                return Ok(new HttpResponseOk{data = producto});
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
-                
-                throw;
+                return BadRequest(new HttpBadResponse(ex));
             }
 
+        }
+        [HttpGet("ObtenerProductosPorNombre/{nombre}")]
+        public async Task<IActionResult> ObtenerProductosPorNombre(string nombre)
+        {
+            try
+            {
+                IEnumerable<ProductoDTO> listaProductos = await _productos.ObtenerProductosPorNombre(nombre);
 
-
-
+                return Ok(new HttpResponseOk{data = listaProductos});
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(new HttpBadResponse(ex));
+            }
         }
  
     }

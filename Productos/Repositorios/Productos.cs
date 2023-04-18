@@ -14,6 +14,8 @@ namespace Productos.Repositorios
     {
         Task<IEnumerable<ProductosPaginacioDTO>> ObtenerTodosLosProductosPorPagina(int nroPagina);
         Task<int> ObtenerCantidadDeRegistrosPaginacion(IDbConnection db);
+        Task<ProductoDTO> ObtenerProductoPorId(int id);
+        Task<IEnumerable<ProductoDTO>> ObtenerProductosPorNombre(string nombre);
         
     }
 
@@ -45,7 +47,7 @@ namespace Productos.Repositorios
             dp.Add("pagina",nroPagina,DbType.Int32);
             dp.Add("cantidadRegistros",cantidadDeRegistrosATraer,DbType.Int32);
             
-            IEnumerable<ProductosPaginacioDTO> lista = await db.QueryAsync<ProductosPaginacioDTO>(sql,dp,commandType: CommandType.StoredProcedure).ConfigureAwait(false);
+            IEnumerable<ProductosPaginacioDTO> lista = await db.QueryAsync<ProductosPaginacioDTO>(sql,dp).ConfigureAwait(false);
 
             return lista;
         }
@@ -66,20 +68,54 @@ namespace Productos.Repositorios
             return cantidadDeRegistros.NroDeRegistros;
         }
 
-        public async Task<int> ObtenerProductosPorId(int id)
+        /// <summary>
+        /// SE obtiene los productos por id en la tabla productos
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+
+        public async Task<ProductoDTO> ObtenerProductoPorId(int id)
         {
             using IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
 
             string sql = $"SELECT * FROM PRODUCTOS WHERE ID_PRODUCTO = @ID";
             DynamicParameters dp = new DynamicParameters();
-            dp.Add()
+            dp.Add("ID",id,DbType.Int32);
+
+            ProductoDTO producto = await db.QueryFirstOrDefaultAsync<ProductoDTO>(sql,dp).ConfigureAwait(false);
+
+            if(producto == null)
+            {
+                throw new Exception("El producto no existe");
+            }
+
+            return producto;
+        }
 
 
+        /// <summary>
+        /// Se obtiene lista de productos por nombre 
+        /// </summary>
+        /// <param name="nombre"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<ProductoDTO>> ObtenerProductosPorNombre(string nombre)
+        {
+            using IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
 
+            string sql = $@"select * from productos where nombre like concat ('%',@test,'%')";
 
+            DynamicParameters dp = new DynamicParameters();
+            dp.Add("test",nombre,DbType.String);
+            
 
+            IEnumerable<ProductoDTO> productosConNombre = await db.QueryAsync<ProductoDTO>(sql,dp).ConfigureAwait(false);
 
+            if(productosConNombre == null)
+            {
+                throw new Exception("No existe productos con ese nombre");
+            }
 
+            return productosConNombre;
         }
     }
 }
