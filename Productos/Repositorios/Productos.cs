@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
-using Microsoft.Data.SqlClient;
+using Dapper.Transaction;
 using Newtonsoft.Json;
 using Productos.DTOS;
+using Microsoft.Extensions.Configuration;
 
 namespace Productos.Repositorios
 {
@@ -15,8 +17,10 @@ namespace Productos.Repositorios
         Task<IEnumerable<ProductosPaginacioDTO>> ObtenerTodosLosProductosPorPagina(int nroPagina);
         Task<int> ObtenerCantidadDeRegistrosPaginacion(IDbConnection db);
         Task<ProductoDTO> ObtenerProductoPorId(int id);
-        Task<ProductoEliminarDTO> ObtenerProductoPorId(int id,IDbConnection db);
+        Task<ProductoEliminarDTO> ObtenerProductoPorIdDb(int id,IDbConnection db);
         Task<IEnumerable<ProductoDTO>> ObtenerProductosPorNombre(string nombre);
+        Task<int> BajaProductoLogico(ProductoEliminarDTO productoEliminar, IDbConnection db);
+        Task<ProductoEliminarDTO> DarDeBajaProductoLogico(int idProducto);
         
     }
 
@@ -95,9 +99,9 @@ namespace Productos.Repositorios
 
 
 
-        public async Task<ProductoEliminarDTO> ObtenerProductoPorId(int id,IDbConnection db)
+        public async Task<ProductoEliminarDTO> ObtenerProductoPorIdDb(int id,IDbConnection db)
         {
-            string sql = $"SELECT * FROM PRODUCTOS WHERE ID_PRODUCTO = @ID";
+            string sql = $@"SELECT * FROM PRODUCTOS WHERE ID_PRODUCTO = @ID";
             DynamicParameters dp = new DynamicParameters();
             dp.Add("ID",id,DbType.Int32);
 
@@ -136,36 +140,84 @@ namespace Productos.Repositorios
             return productosConNombre;
         }
 
-
-        public async Task<int> DarDeBajaProductoLogico(int idProducto)
+        /// <summary>
+        /// da de baja un producto invocando un metodo, de manera transaccional
+        /// </summary>
+        /// <param name="idProducto"></param>
+        /// <returns></returns>
+        public async Task<ProductoEliminarDTO> DarDeBajaProductoLogico(int idProducto)
         {
             
             using IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            if (db.State is ConnectionState.Closed) db.Open();
+            
 
+           
+            if (db.State == ConnectionState.Closed)
+            {
+                db.Open();
+            }
+            
+            
+             
+            using var transaccion = db.BeginTransaction();
+            
 
-            ProductoEliminarDTO productoAEliminar = await this.ObtenerProductoPorId(idProducto,db);
+            ProductoEliminarDTO productoAEliminar = await ObtenerProductoPorIdDb(idProducto,db);
 
             if(productoAEliminar==null)
             {
                 throw new Exception("Error en la cosnulta de producto");
             }
 
-            if()
-            using IDbTransaction transaccion = db.BeginTransaction();
+            if(productoAEliminar.Activo == (int)Types.EnumsLib.TipoEstado.Baja)
+            {
+                throw new Exception("Error este producto ya esta dado de baja");
+            }
+            
+            
+            int row = await this.BajaProductoLogico(productoAEliminar,db);
+            transaccion.Rollback();
+            //transaccion.Commit();
+             
 
-
-        }
-
-
-        public async Task<int> DarDeBajaProductoLogico(ProductoDTO idProducto, IDbConnection db)
-        {
+            return productoAEliminar;
             
 
 
+        }
 
+        /// <summary>
+        /// Da de baja el producto que se envia por parametros, poniendo en estado 0 
+        /// </summary>
+        /// <param name="productoEliminar"></param>
+        /// <param name="db"></param>
+        /// <returns></returns>
+        public async Task<int> BajaProductoLogico(ProductoEliminarDTO productoEliminar, IDbConnection db)
+        {
+            
+            string sql = @"UPDATE PRODUCTOS SET FECHA_MODIFICACION = getdate(), ACTIVO = @activo where ID_PRODUCTO = @id";
+
+            DynamicParameters dp = new DynamicParameters();
+
+            dp.Add("activo",Types.EnumsLib.TipoEstado.Baja,DbType.Int16);
+            dp.Add("id",productoEliminar.Id_Producto,DbType.Int32);
+
+            int filasModificados = await db.ExecuteAsync(sql,dp).ConfigureAwait(false);
+
+            if(filasModificados == 0)
+            {
+                throw new Exception("Error no se logro la baja error 00003");
+            }
+
+            if(filasModificados > 1)
+            {
+                throw new Exception("Hay 2 productos con el mismo id, error");
+            }
+
+            return filasModificados;
 
 
         }
+
     }
 }

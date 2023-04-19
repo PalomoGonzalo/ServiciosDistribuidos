@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 using Productos.DTOS;
 using Productos.Repositorios;
@@ -74,6 +73,20 @@ namespace Productos.Controllers
                 return BadRequest(new HttpBadResponse(ex));
             }
         }
- 
+
+        [HttpPost("DarDeBajaProductoLogico")]
+        public async Task<IActionResult> DarDeBajaProductoLogico([FromBody]ProductoEliminarIdDTO idProducto)
+        {
+            try
+            {
+                ProductoEliminarDTO productoEliminado = await _productos.DarDeBajaProductoLogico(idProducto.Id_producto);
+                return Ok(new HttpResponseOk{data = productoEliminado,msg = "Se dio de baja correctamente"});
+            }
+            catch (System.Exception ex)
+            {
+                
+                return BadRequest(new HttpBadResponse(ex));
+            }
+        }
     }
 }
