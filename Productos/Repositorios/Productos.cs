@@ -17,9 +17,9 @@ namespace Productos.Repositorios
         Task<IEnumerable<ProductosPaginacioDTO>> ObtenerTodosLosProductosPorPagina(int nroPagina);
         Task<int> ObtenerCantidadDeRegistrosPaginacion(IDbConnection db);
         Task<ProductoDTO> ObtenerProductoPorId(int id);
-        Task<ProductoEliminarDTO> ObtenerProductoPorIdDb(int id,IDbConnection db);
+        Task<ProductoEliminarDTO> ObtenerProductoPorIdDb(int id,IDbConnection db,IDbTransaction transaccion);
         Task<IEnumerable<ProductoDTO>> ObtenerProductosPorNombre(string nombre);
-        Task<int> BajaProductoLogico(ProductoEliminarDTO productoEliminar, IDbConnection db);
+        Task<int> BajaProductoLogico(ProductoEliminarDTO productoEliminar, IDbConnection db,IDbTransaction transaccion);
         Task<ProductoEliminarDTO> DarDeBajaProductoLogico(int idProducto);
         
     }
@@ -99,7 +99,7 @@ namespace Productos.Repositorios
 
 
 
-        public async Task<ProductoEliminarDTO> ObtenerProductoPorIdDb(int id,IDbConnection db)
+        public async Task<ProductoEliminarDTO> ObtenerProductoPorIdDb(int id,IDbConnection db,IDbTransaction transaccion)
         {
             string sql = $@"SELECT * FROM PRODUCTOS WHERE ID_PRODUCTO = @ID";
             DynamicParameters dp = new DynamicParameters();
@@ -148,41 +148,33 @@ namespace Productos.Repositorios
         public async Task<ProductoEliminarDTO> DarDeBajaProductoLogico(int idProducto)
         {
             
-            using IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
+                using IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             
+                if (db.State == ConnectionState.Closed)
+                {
+                    db.Open();
+                }
+                
+                using IDbTransaction transaccion = db.BeginTransaction();
 
-           
-            if (db.State == ConnectionState.Closed)
-            {
-                db.Open();
-            }
-            
-            
-             
-            using var transaccion = db.BeginTransaction();
-            
+                ProductoEliminarDTO productoAEliminar = await ObtenerProductoPorIdDb(idProducto,db,transaccion);
 
-            ProductoEliminarDTO productoAEliminar = await ObtenerProductoPorIdDb(idProducto,db);
+                if(productoAEliminar==null)
+                {
+                    throw new Exception("Error en la cosnulta de producto");
+                }
 
-            if(productoAEliminar==null)
-            {
-                throw new Exception("Error en la cosnulta de producto");
-            }
-
-            if(productoAEliminar.Activo == (int)Types.EnumsLib.TipoEstado.Baja)
-            {
-                throw new Exception("Error este producto ya esta dado de baja");
-            }
+                if(productoAEliminar.Activo == (int)Types.EnumsLib.TipoEstado.Baja)
+                {
+                    throw new Exception("Error este producto ya esta dado de baja");
+                }
+                
+                
+                int row = await this.BajaProductoLogico(productoAEliminar,db,transaccion);
+                transaccion.Rollback();
+                //transaccion.Commit();
+                return productoAEliminar;
             
-            
-            int row = await this.BajaProductoLogico(productoAEliminar,db);
-            transaccion.Rollback();
-            //transaccion.Commit();
-             
-
-            return productoAEliminar;
-            
-
 
         }
 
@@ -192,7 +184,7 @@ namespace Productos.Repositorios
         /// <param name="productoEliminar"></param>
         /// <param name="db"></param>
         /// <returns></returns>
-        public async Task<int> BajaProductoLogico(ProductoEliminarDTO productoEliminar, IDbConnection db)
+        public async Task<int> BajaProductoLogico(ProductoEliminarDTO productoEliminar, IDbConnection db,IDbTransaction transaccion)
         {
             
             string sql = @"UPDATE PRODUCTOS SET FECHA_MODIFICACION = getdate(), ACTIVO = @activo where ID_PRODUCTO = @id";
