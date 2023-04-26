@@ -17,11 +17,11 @@ namespace Productos.Repositorios
         Task<IEnumerable<ProductosPaginacioDTO>> ObtenerTodosLosProductosPorPagina(int nroPagina);
         Task<int> ObtenerCantidadDeRegistrosPaginacion(IDbConnection db);
         Task<ProductoDTO> ObtenerProductoPorId(int id);
-        Task<ProductoEliminarDTO> ObtenerProductoPorIdDb(int id,IDbConnection db,IDbTransaction transaccion);
+        Task<ProductoEliminarDTO> ObtenerProductoPorIdDb(int id, IDbConnection db, IDbTransaction transaccion);
         Task<IEnumerable<ProductoDTO>> ObtenerProductosPorNombre(string nombre);
-        Task<int> BajaProductoLogico(ProductoEliminarDTO productoEliminar, IDbConnection db,IDbTransaction transaccion);
+        Task<int> BajaProductoLogico(ProductoEliminarDTO productoEliminar, IDbConnection db, IDbTransaction transaccion);
         Task<ProductoEliminarDTO> DarDeBajaProductoLogico(int idProducto);
-        
+
     }
 
     public class Producto : IProductos
@@ -49,10 +49,10 @@ namespace Productos.Repositorios
 
             DynamicParameters dp = new DynamicParameters();
 
-            dp.Add("pagina",nroPagina,DbType.Int32);
-            dp.Add("cantidadRegistros",cantidadDeRegistrosATraer,DbType.Int32);
-            
-            IEnumerable<ProductosPaginacioDTO> lista = await db.QueryAsync<ProductosPaginacioDTO>(sql,dp).ConfigureAwait(false);
+            dp.Add("pagina", nroPagina, DbType.Int32);
+            dp.Add("cantidadRegistros", cantidadDeRegistrosATraer, DbType.Int32);
+
+            IEnumerable<ProductosPaginacioDTO> lista = await db.QueryAsync<ProductosPaginacioDTO>(sql, dp).ConfigureAwait(false);
 
             return lista;
         }
@@ -65,7 +65,7 @@ namespace Productos.Repositorios
         {
             string sql = $"select DATA from parametros where ID_PARAMETRO = 1";
             String data = await db.QuerySingleAsync<String>(sql).ConfigureAwait(false);
-            if(data == null)
+            if (data == null)
             {
                 throw new Exception("Error no existe datos de paginacion");
             }
@@ -85,11 +85,11 @@ namespace Productos.Repositorios
 
             string sql = $"SELECT * FROM PRODUCTOS WHERE ID_PRODUCTO = @ID";
             DynamicParameters dp = new DynamicParameters();
-            dp.Add("ID",id,DbType.Int32);
+            dp.Add("ID", id, DbType.Int32);
 
-            ProductoDTO producto = await db.QueryFirstOrDefaultAsync<ProductoDTO>(sql,dp).ConfigureAwait(false);
+            ProductoDTO producto = await db.QueryFirstOrDefaultAsync<ProductoDTO>(sql, dp).ConfigureAwait(false);
 
-            if(producto == null)
+            if (producto == null)
             {
                 throw new Exception("El producto no existe");
             }
@@ -99,15 +99,15 @@ namespace Productos.Repositorios
 
 
 
-        public async Task<ProductoEliminarDTO> ObtenerProductoPorIdDb(int id,IDbConnection db,IDbTransaction transaccion)
+        public async Task<ProductoEliminarDTO> ObtenerProductoPorIdDb(int id, IDbConnection db, IDbTransaction transaccion)
         {
             string sql = $@"SELECT * FROM PRODUCTOS WHERE ID_PRODUCTO = @ID";
             DynamicParameters dp = new DynamicParameters();
-            dp.Add("ID",id,DbType.Int32);
+            dp.Add("ID", id, DbType.Int32);
 
-            ProductoEliminarDTO producto = await db.QueryFirstOrDefaultAsync<ProductoEliminarDTO>(sql,dp).ConfigureAwait(false);
+            ProductoEliminarDTO producto = await db.QueryFirstOrDefaultAsync<ProductoEliminarDTO>(sql, dp).ConfigureAwait(false);
 
-            if(producto == null)
+            if (producto == null)
             {
                 throw new Exception("El producto no existe");
             }
@@ -128,11 +128,11 @@ namespace Productos.Repositorios
             string sql = $@"select * from productos where nombre like concat ('%',@test,'%')";
 
             DynamicParameters dp = new DynamicParameters();
-            dp.Add("test",nombre,DbType.String);
-            
-            IEnumerable<ProductoDTO> productosConNombre = await db.QueryAsync<ProductoDTO>(sql,dp).ConfigureAwait(false);
+            dp.Add("test", nombre, DbType.String);
 
-            if(productosConNombre.Count() == 0)
+            IEnumerable<ProductoDTO> productosConNombre = await db.QueryAsync<ProductoDTO>(sql, dp).ConfigureAwait(false);
+
+            if (productosConNombre.Count() == 0)
             {
                 throw new Exception("No existe productos con ese nombre");
             }
@@ -147,35 +147,40 @@ namespace Productos.Repositorios
         /// <returns></returns>
         public async Task<ProductoEliminarDTO> DarDeBajaProductoLogico(int idProducto)
         {
-            
-                using IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
-            
-                if (db.State == ConnectionState.Closed)
-                {
-                    db.Open();
-                }
-                
-                using IDbTransaction transaccion = db.BeginTransaction();
+            using IDbConnection db = new SqlConnection(_config.GetConnectionString("DefaultConnection"));
 
-                ProductoEliminarDTO productoAEliminar = await ObtenerProductoPorIdDb(idProducto,db,transaccion);
+            if (db.State == ConnectionState.Closed)
+            {
+                db.Open();
+            }
 
-                if(productoAEliminar==null)
+            using IDbTransaction transaccion = db.BeginTransaction();
+
+            try
+            {
+                ProductoEliminarDTO productoAEliminar = await ObtenerProductoPorIdDb(idProducto, db, transaccion);
+
+                if (productoAEliminar == null)
                 {
                     throw new Exception("Error en la cosnulta de producto");
                 }
 
-                if(productoAEliminar.Activo == (int)Types.EnumsLib.TipoEstado.Baja)
+                if (productoAEliminar.Activo == (int)Types.EnumsLib.TipoEstado.Baja)
                 {
                     throw new Exception("Error este producto ya esta dado de baja");
                 }
-                
-                
-                int row = await this.BajaProductoLogico(productoAEliminar,db,transaccion);
-                transaccion.Rollback();
-                //transaccion.Commit();
-                return productoAEliminar;
-            
 
+                int row = await this.BajaProductoLogico(productoAEliminar, db, transaccion);
+                
+                transaccion.Commit();
+                return productoAEliminar;
+            }
+            catch (System.Exception)
+            {   
+                transaccion.Rollback();
+
+                throw new Exception("Error al realizar la baja, error 2222");
+            }
         }
 
         /// <summary>
@@ -184,24 +189,24 @@ namespace Productos.Repositorios
         /// <param name="productoEliminar"></param>
         /// <param name="db"></param>
         /// <returns></returns>
-        public async Task<int> BajaProductoLogico(ProductoEliminarDTO productoEliminar, IDbConnection db,IDbTransaction transaccion)
+        public async Task<int> BajaProductoLogico(ProductoEliminarDTO productoEliminar, IDbConnection db, IDbTransaction transaccion)
         {
-            
+
             string sql = @"UPDATE PRODUCTOS SET FECHA_MODIFICACION = getdate(), ACTIVO = @activo where ID_PRODUCTO = @id";
 
             DynamicParameters dp = new DynamicParameters();
 
-            dp.Add("activo",Types.EnumsLib.TipoEstado.Baja,DbType.Int16);
-            dp.Add("id",productoEliminar.Id_Producto,DbType.Int32);
+            dp.Add("activo", Types.EnumsLib.TipoEstado.Baja, DbType.Int16);
+            dp.Add("id", productoEliminar.Id_Producto, DbType.Int32);
 
-            int filasModificados = await db.ExecuteAsync(sql,dp).ConfigureAwait(false);
+            int filasModificados = await db.ExecuteAsync(sql, dp).ConfigureAwait(false);
 
-            if(filasModificados == 0)
+            if (filasModificados == 0)
             {
                 throw new Exception("Error no se logro la baja error 00003");
             }
 
-            if(filasModificados > 1)
+            if (filasModificados > 1)
             {
                 throw new Exception("Hay 2 productos con el mismo id, error");
             }
