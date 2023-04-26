@@ -67,7 +67,6 @@ namespace UserManager.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet("ObtenerTodosLosUsuarios/")]
-        [Authorize]
         public async Task<IActionResult> ObtenerTodosLosUsuarios()
         {
             try
