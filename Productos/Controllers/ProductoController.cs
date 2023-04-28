@@ -44,6 +44,15 @@ namespace Productos.Controllers
             }
         }
 
+
+        [HttpGet("TestItemClaims")]
+        public async Task<IActionResult> TestItemClaims()
+        {
+            var test = User.FindFirst("USUARIO").Value;
+           //var user = User.Claims.Where(x => x.Type =="USUARIO");
+           return Ok(test);
+        }
+
         [HttpGet("ObtenerProductoPorId/{id}")]
         public async Task<IActionResult> ObtenerProductoPorId(int id)
         {
