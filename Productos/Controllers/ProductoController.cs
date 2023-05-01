@@ -46,11 +46,17 @@ namespace Productos.Controllers
 
 
         [HttpGet("TestItemClaims")]
-        public async Task<IActionResult> TestItemClaims()
+        public IActionResult TestItemClaims()
         {
-            var test = User.FindFirst("USUARIO").Value;
-           //var user = User.Claims.Where(x => x.Type =="USUARIO");
-           return Ok(test);
+            try
+            {
+                string test = _productos.TestClaims(this.HttpContext);
+                return Ok(new HttpResponseOk{data = test});
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(new HttpBadResponse(ex));
+            }
         }
 
         [HttpGet("ObtenerProductoPorId/{id}")]

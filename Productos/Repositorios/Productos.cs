@@ -9,6 +9,7 @@ using Dapper.Transaction;
 using Newtonsoft.Json;
 using Productos.DTOS;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Http;
 
 namespace Productos.Repositorios
 {
@@ -21,6 +22,7 @@ namespace Productos.Repositorios
         Task<IEnumerable<ProductoDTO>> ObtenerProductosPorNombre(string nombre);
         Task<int> BajaProductoLogico(ProductoEliminarDTO productoEliminar, IDbConnection db, IDbTransaction transaccion);
         Task<ProductoEliminarDTO> DarDeBajaProductoLogico(int idProducto);
+        string TestClaims(HttpContext test);
 
     }
 
@@ -216,5 +218,10 @@ namespace Productos.Repositorios
 
         }
 
+        public string TestClaims(HttpContext test)
+        {
+            string usuario = test.User.FindFirst("USUARIO").Value;
+            return usuario;
+        }
     }
 }
