@@ -5,8 +5,6 @@ COPY *.csproj ./
 COPY . ./
 
 
-RUN dotnet new tool-manifest --force
-RUN dotnet tool install  --tool-path /tools  dotnet-counters
 
 RUN dotnet restore
 
@@ -16,8 +14,6 @@ FROM mcr.microsoft.com/dotnet/aspnet:6.0 as runtime
 ENV TZ=America/Buenos_Aires
 
 WORKDIR /app
-COPY --from=build-env /app ./
-COPY --from=build-env /tools /tools
 COPY --from=build-env /app/out .
 ENTRYPOINT ["dotnet","Productos.dll"]
 
