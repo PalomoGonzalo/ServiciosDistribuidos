@@ -1,0 +1,8 @@
+02-05-2023 19:16:04 [Information] Se inicio el servicio rest Productos Backend
+02-05-2023 19:16:05 [Information] Now listening on: "https://localhost:7271"
+02-05-2023 19:16:05 [Information] Now listening on: "http://localhost:5234"
+02-05-2023 19:16:05 [Information] Application started. Press Ctrl+C to shut down.
+02-05-2023 19:16:05 [Information] Hosting environment: "Development"
+02-05-2023 19:16:05 [Information] Content root path: "/home/matias/Documentos/MicroServicios/ServiciosDistribuidos/Productos/"
+02-05-2023 19:17:13 [Information] {"IdServicio":1,"Servicio":"ObtenerProductosPorPaginacion","Usuario":"string","IP":"198.128.128.222","Proceso":"productos","Pedido":null,"Serie":null,"Plu":null,"Fecha":"2023-05-02T19:17:12.2829005-03:00","Duracion":"00:00:00.7241269","Estado":"ok"}
+02-05-2023 19:17:46 [Information] Application is shutting down...
