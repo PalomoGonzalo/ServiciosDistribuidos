@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
+using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -7,12 +9,37 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Productos.Repositorios;
 using Serilog;
+using Serilog.Events;
+using Productos.Servicios;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Host.UseSerilog((context,configuration)=>
-    configuration.ReadFrom.Configuration(context.Configuration)
-);
+
+IConfigurationRoot _configs = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
+                                                       .AddJsonFile("appsettings.json", false)
+                                                       .Build();
+
+Log.Logger = new LoggerConfiguration()
+                     .Enrich.FromLogContext()
+                 .Enrich.WithProcessName()
+                 .Enrich.WithProcessId()
+                 .Enrich.WithThreadId()
+                 .Enrich.WithThreadName()
+                 .MinimumLevel.Information()
+                 .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+                 .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+                   .WriteTo.File(_configs.GetSection("LoggingConf").GetValue<string>("outputPath").Trim() + "log_productos.txt",
+                                    outputTemplate: "{Timestamp:dd-MM-yyyy HH:mm:ss} [{Level}] {Message}{NewLine}{Exception}",
+                                    rollOnFileSizeLimit: true,
+                                    retainedFileCountLimit: 5,
+                                    rollingInterval: RollingInterval.Day)
+                   .CreateLogger();
+
+
+
+Log.Write(LogEventLevel.Information, "Se inicio el servicio rest Productos Backend");
+
+builder.Host.UseSerilog();
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -86,7 +113,9 @@ builder.Services.AddAuthentication(options =>
 
 
 builder.Services.AddScoped<IProductos,Producto>();
-Log.Information("Iniciando programa");
+builder.Services.AddScoped<ILogService,LoggService>();
+
+
 
 var app = builder.Build();
 
@@ -95,7 +124,7 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.UseSerilogRequestLogging();
+//app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
 app.UseAuthentication();

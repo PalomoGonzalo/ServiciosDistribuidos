@@ -8,7 +8,9 @@ using Dapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Productos.DTOS;
+using Productos.Models;
 using Productos.Repositorios;
+using Productos.Servicios;
 using Productos.Types;
 
 namespace Productos.Controllers
@@ -18,17 +20,29 @@ namespace Productos.Controllers
     {   
 
         private readonly IProductos _productos;
-        private readonly ILogger<ProductoController> _logger;
+        private readonly ILogService _log;
 
-        public ProductoController(IProductos productos, ILogger<ProductoController> logger)
+
+        public ProductoController(IProductos productos, ILogService log)
         {
             _productos = productos;
-            _logger = logger;
+            _log = log;
         }
 
         [HttpGet("ObtenerProductosPorPaginacion/{nroDePagina}")]
         public async Task<IActionResult> ObtenerProductosPorPaginacion(int nroDePagina)
         {
+            Logger logger = new Logger()
+            {
+                Servicio = "ObtenerProductosPorPaginacion",
+                Usuario = User.FindFirst("USUARIO").Value,
+                IP = "198.128.128.222",
+                Proceso = "productos",
+                Fecha = DateTime.Now,
+            };
+            
+
+
             try
             {
                 IEnumerable<ProductosPaginacioDTO> listaProductos = await _productos.ObtenerTodosLosProductosPorPagina(nroDePagina);
@@ -37,6 +51,8 @@ namespace Productos.Controllers
                 {
                     return NotFound(new HttpBadResponse("No hay datos en esta pagina"));
                 }
+
+                _log.GrabarLog(Serilog.Events.LogEventLevel.Information,logger,null);
 
                 return Ok(new HttpResponseOk{data = listaProductos});   
             }
@@ -53,7 +69,6 @@ namespace Productos.Controllers
             try
             {
                 string test = _productos.TestClaims(this.HttpContext);
-                _logger.LogInformation("Haciendo consulta claims");
                 return Ok(new HttpResponseOk{data = test});
             }
             catch (System.Exception ex)
@@ -67,7 +82,7 @@ namespace Productos.Controllers
         {
             try
             {
-                _logger.LogInformation("Haciendo consulta ObtenerProductoPorId {@id} " ,id);
+            
                 ProductoDTO producto = await _productos.ObtenerProductoPorId(id);
 
 
