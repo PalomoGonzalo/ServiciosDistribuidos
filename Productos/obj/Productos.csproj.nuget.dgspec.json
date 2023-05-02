@@ -1,27 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\153131\\Desktop\\ServiciosDistribuidos\\ServiciosDistribuidos\\Productos\\Productos.csproj": {}
+    "/home/matias/Documentos/MicroServicios/ServiciosDistribuidos/Productos/Productos.csproj": {}
   },
   "projects": {
-    "C:\\Users\\153131\\Desktop\\ServiciosDistribuidos\\ServiciosDistribuidos\\Productos\\Productos.csproj": {
+    "/home/matias/Documentos/MicroServicios/ServiciosDistribuidos/Productos/Productos.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\153131\\Desktop\\ServiciosDistribuidos\\ServiciosDistribuidos\\Productos\\Productos.csproj",
+        "projectUniqueName": "/home/matias/Documentos/MicroServicios/ServiciosDistribuidos/Productos/Productos.csproj",
         "projectName": "Productos",
-        "projectPath": "C:\\Users\\153131\\Desktop\\ServiciosDistribuidos\\ServiciosDistribuidos\\Productos\\Productos.csproj",
-        "packagesPath": "C:\\Users\\153131\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\153131\\Desktop\\ServiciosDistribuidos\\ServiciosDistribuidos\\Productos\\obj\\",
+        "projectPath": "/home/matias/Documentos/MicroServicios/ServiciosDistribuidos/Productos/Productos.csproj",
+        "packagesPath": "/home/matias/.nuget/packages/",
+        "outputPath": "/home/matias/Documentos/MicroServicios/ServiciosDistribuidos/Productos/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\153131\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/home/matias/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net6.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -56,6 +54,10 @@
               "target": "Package",
               "version": "[13.0.3, )"
             },
+            "Serilog.AspNetCore": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
             "Swashbuckle.AspNetCore": {
               "target": "Package",
               "version": "[6.2.3, )"
@@ -83,7 +85,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.301\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/6.0.116/RuntimeIdentifierGraph.json"
         }
       }
     }

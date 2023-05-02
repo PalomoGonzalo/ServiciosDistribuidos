@@ -18,10 +18,12 @@ namespace Productos.Controllers
     {   
 
         private readonly IProductos _productos;
+        private readonly ILogger<ProductoController> _logger;
 
-        public ProductoController(IProductos productos)
+        public ProductoController(IProductos productos, ILogger<ProductoController> logger)
         {
             _productos = productos;
+            _logger = logger;
         }
 
         [HttpGet("ObtenerProductosPorPaginacion/{nroDePagina}")]
@@ -51,6 +53,7 @@ namespace Productos.Controllers
             try
             {
                 string test = _productos.TestClaims(this.HttpContext);
+                _logger.LogInformation("Haciendo consulta claims");
                 return Ok(new HttpResponseOk{data = test});
             }
             catch (System.Exception ex)
@@ -64,7 +67,10 @@ namespace Productos.Controllers
         {
             try
             {
+                _logger.LogInformation("Haciendo consulta ObtenerProductoPorId {@id} " ,id);
                 ProductoDTO producto = await _productos.ObtenerProductoPorId(id);
+
+
 
                 return Ok(new HttpResponseOk{data = producto});
             }
