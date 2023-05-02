@@ -15,9 +15,7 @@ using Productos.Servicios;
 var builder = WebApplication.CreateBuilder(args);
 
 
-IConfigurationRoot _configs = new ConfigurationBuilder().SetBasePath(Directory.GetCurrentDirectory())
-                                                       .AddJsonFile("appsettings.json", false)
-                                                       .Build();
+
 
 Log.Logger = new LoggerConfiguration()
                      .Enrich.FromLogContext()
@@ -28,7 +26,7 @@ Log.Logger = new LoggerConfiguration()
                  .MinimumLevel.Information()
                  .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
                  .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
-                   .WriteTo.File(_configs.GetSection("LoggingConf").GetValue<string>("outputPath").Trim() + "log_productos.txt",
+                   .WriteTo.File(builder.Configuration.GetSection("LoggingConf").GetValue<string>("outputPath").Trim() + "log_productos.txt",
                                     outputTemplate: "{Timestamp:dd-MM-yyyy HH:mm:ss} [{Level}] {Message}{NewLine}{Exception}",
                                     rollOnFileSizeLimit: true,
                                     retainedFileCountLimit: 5,
@@ -38,6 +36,8 @@ Log.Logger = new LoggerConfiguration()
 
 
 Log.Write(LogEventLevel.Information, "Se inicio el servicio rest Productos Backend");
+
+
 
 builder.Host.UseSerilog();
 // Add services to the container.
