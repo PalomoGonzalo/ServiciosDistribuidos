@@ -6,3 +6,169 @@
 02-05-2023 19:16:05 [Information] Content root path: "/home/matias/Documentos/MicroServicios/ServiciosDistribuidos/Productos/"
 02-05-2023 19:17:13 [Information] {"IdServicio":1,"Servicio":"ObtenerProductosPorPaginacion","Usuario":"string","IP":"198.128.128.222","Proceso":"productos","Pedido":null,"Serie":null,"Plu":null,"Fecha":"2023-05-02T19:17:12.2829005-03:00","Duracion":"00:00:00.7241269","Estado":"ok"}
 02-05-2023 19:17:46 [Information] Application is shutting down...
+02-05-2023 20:05:06 [Information] Se inicio el servicio rest Productos Backend
+02-05-2023 20:05:06 [Information] Now listening on: "https://localhost:7271"
+02-05-2023 20:05:06 [Information] Now listening on: "http://localhost:5234"
+02-05-2023 20:05:06 [Information] Application started. Press Ctrl+C to shut down.
+02-05-2023 20:05:06 [Information] Hosting environment: "Development"
+02-05-2023 20:05:06 [Information] Content root path: "/home/matias/Documentos/MicroServicios/ServiciosDistribuidos/Productos/"
+02-05-2023 20:06:09 [Error] An unhandled exception has occurred while executing the request.
+System.Exception: Not found
+   at Productos.Controllers.ProductoController.DescargarLog(String archivo) in /home/matias/Documentos/MicroServicios/ServiciosDistribuidos/Productos/Controllers/ProductoController.cs:line 103
+   at lambda_method5(Closure , Object , Object[] )
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeActionMethodAsync()
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeNextActionFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+02-05-2023 20:06:22 [Information] Se inicio el servicio rest Productos Backend
+02-05-2023 20:06:23 [Information] Now listening on: "https://localhost:7271"
+02-05-2023 20:06:23 [Information] Now listening on: "http://localhost:5234"
+02-05-2023 20:06:23 [Information] Application started. Press Ctrl+C to shut down.
+02-05-2023 20:06:23 [Information] Hosting environment: "Development"
+02-05-2023 20:06:23 [Information] Content root path: "/home/matias/Documentos/MicroServicios/ServiciosDistribuidos/Productos/"
+02-05-2023 20:06:44 [Information] Se inicio el servicio rest Productos Backend
+02-05-2023 20:06:45 [Information] Now listening on: "https://localhost:7271"
+02-05-2023 20:06:45 [Information] Now listening on: "http://localhost:5234"
+02-05-2023 20:06:45 [Information] Application started. Press Ctrl+C to shut down.
+02-05-2023 20:06:45 [Information] Hosting environment: "Development"
+02-05-2023 20:06:45 [Information] Content root path: "/home/matias/Documentos/MicroServicios/ServiciosDistribuidos/Productos/"
+02-05-2023 20:07:06 [Error] An unhandled exception has occurred while executing the request.
+System.Exception: Exception of type 'System.Exception' was thrown.
+   at Productos.Controllers.ProductoController.DescargarLog(String archivo) in /home/matias/Documentos/MicroServicios/ServiciosDistribuidos/Productos/Controllers/ProductoController.cs:line 103
+   at lambda_method3(Closure , Object , Object[] )
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.SyncActionResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeActionMethodAsync()
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeNextActionFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+02-05-2023 20:10:43 [Information] Se inicio el servicio rest Productos Backend
+02-05-2023 20:10:44 [Information] Now listening on: "https://localhost:7271"
+02-05-2023 20:10:44 [Information] Now listening on: "http://localhost:5234"
+02-05-2023 20:10:44 [Information] Application started. Press Ctrl+C to shut down.
+02-05-2023 20:10:44 [Information] Hosting environment: "Development"
+02-05-2023 20:10:44 [Information] Content root path: "/home/matias/Documentos/MicroServicios/ServiciosDistribuidos/Productos/"
+02-05-2023 20:12:07 [Information] Se inicio el servicio rest Productos Backend
+02-05-2023 20:12:07 [Information] Now listening on: "https://localhost:7271"
+02-05-2023 20:12:07 [Information] Now listening on: "http://localhost:5234"
+02-05-2023 20:12:07 [Information] Application started. Press Ctrl+C to shut down.
+02-05-2023 20:12:07 [Information] Hosting environment: "Development"
+02-05-2023 20:12:07 [Information] Content root path: "/home/matias/Documentos/MicroServicios/ServiciosDistribuidos/Productos/"
+02-05-2023 20:12:21 [Error] An unhandled exception has occurred while executing the request.
+System.ArgumentException: Invalid type parameter 'Microsoft.AspNetCore.Mvc.FileStreamResult' specified for 'ActionResult<T>'.
+   at Microsoft.AspNetCore.Mvc.ActionResult`1..ctor(ActionResult result)
+   at Microsoft.AspNetCore.Mvc.ActionResult`1.op_Implicit(ActionResult result)
+   at Productos.Controllers.ProductoController.DescargarLog(String archivo) in /home/matias/Documentos/MicroServicios/ServiciosDistribuidos/Productos/Controllers/ProductoController.cs:line 103
+   at lambda_method6(Closure , Object )
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+02-05-2023 20:12:33 [Error] An unhandled exception has occurred while executing the request.
+System.ArgumentException: Invalid type parameter 'Microsoft.AspNetCore.Mvc.FileStreamResult' specified for 'ActionResult<T>'.
+   at Microsoft.AspNetCore.Mvc.ActionResult`1..ctor(ActionResult result)
+   at Microsoft.AspNetCore.Mvc.ActionResult`1.op_Implicit(ActionResult result)
+   at Productos.Controllers.ProductoController.DescargarLog(String archivo) in /home/matias/Documentos/MicroServicios/ServiciosDistribuidos/Productos/Controllers/ProductoController.cs:line 103
+   at lambda_method6(Closure , Object )
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.AwaitableObjectResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeActionMethodAsync>g__Awaited|12_0(ControllerActionInvoker invoker, ValueTask`1 actionResultValueTask)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.<InvokeNextActionFilterAsync>g__Awaited|10_0(ControllerActionInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+02-05-2023 20:16:17 [Information] Se inicio el servicio rest Productos Backend
+02-05-2023 20:16:17 [Information] Now listening on: "https://localhost:7271"
+02-05-2023 20:16:17 [Information] Now listening on: "http://localhost:5234"
+02-05-2023 20:16:17 [Information] Application started. Press Ctrl+C to shut down.
+02-05-2023 20:16:17 [Information] Hosting environment: "Development"
+02-05-2023 20:16:17 [Information] Content root path: "/home/matias/Documentos/MicroServicios/ServiciosDistribuidos/Productos/"
+02-05-2023 20:16:38 [Error] An unhandled exception has occurred while executing the request.
+System.ArgumentException: Invalid type parameter 'Microsoft.AspNetCore.Mvc.FileStreamResult' specified for 'ActionResult<T>'.
+   at Microsoft.AspNetCore.Mvc.ActionResult`1..ctor(ActionResult result)
+   at Microsoft.AspNetCore.Mvc.ActionResult`1.op_Implicit(ActionResult result)
+   at Productos.Controllers.ProductoController.DescargarLog(String archivo) in /home/matias/Documentos/MicroServicios/ServiciosDistribuidos/Productos/Controllers/ProductoController.cs:line 103
+   at lambda_method3(Closure , Object , Object[] )
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ActionMethodExecutor.SyncObjectResultExecutor.Execute(IActionResultTypeMapper mapper, ObjectMethodExecutor executor, Object controller, Object[] arguments)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeActionMethodAsync()
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeNextActionFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Rethrow(ActionExecutedContextSealed context)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.Next(State& next, Scope& scope, Object& state, Boolean& isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ControllerActionInvoker.InvokeInnerFilterAsync()
+--- End of stack trace from previous location ---
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeFilterPipelineAsync>g__Awaited|20_0(ResourceInvoker invoker, Task lastTask, State next, Scope scope, Object state, Boolean isCompleted)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Mvc.Infrastructure.ResourceInvoker.<InvokeAsync>g__Awaited|17_0(ResourceInvoker invoker, Task task, IDisposable scope)
+   at Microsoft.AspNetCore.Routing.EndpointMiddleware.<Invoke>g__AwaitRequestTask|6_0(Endpoint endpoint, Task requestTask, ILogger logger)
+   at Microsoft.AspNetCore.Authorization.AuthorizationMiddleware.Invoke(HttpContext context)
+   at Microsoft.AspNetCore.Authentication.AuthenticationMiddleware.Invoke(HttpContext context)
+   at Swashbuckle.AspNetCore.SwaggerUI.SwaggerUIMiddleware.Invoke(HttpContext httpContext)
+   at Swashbuckle.AspNetCore.Swagger.SwaggerMiddleware.Invoke(HttpContext httpContext, ISwaggerProvider swaggerProvider)
+   at Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware.Invoke(HttpContext context)
+02-05-2023 20:28:16 [Information] Se inicio el servicio rest Productos Backend
+02-05-2023 20:28:16 [Information] Now listening on: "https://localhost:7271"
+02-05-2023 20:28:16 [Information] Now listening on: "http://localhost:5234"
+02-05-2023 20:28:16 [Information] Application started. Press Ctrl+C to shut down.
+02-05-2023 20:28:16 [Information] Hosting environment: "Development"
+02-05-2023 20:28:16 [Information] Content root path: "/home/matias/Documentos/MicroServicios/ServiciosDistribuidos/Productos/"
+02-05-2023 20:29:18 [Information] Se inicio el servicio rest Productos Backend
+02-05-2023 20:29:19 [Information] Now listening on: "https://localhost:7271"
+02-05-2023 20:29:19 [Information] Now listening on: "http://localhost:5234"
+02-05-2023 20:29:19 [Information] Application started. Press Ctrl+C to shut down.
+02-05-2023 20:29:19 [Information] Hosting environment: "Development"
+02-05-2023 20:29:19 [Information] Content root path: "/home/matias/Documentos/MicroServicios/ServiciosDistribuidos/Productos/"
+02-05-2023 20:40:10 [Information] Se inicio el servicio rest Productos Backend
+02-05-2023 20:40:11 [Information] Now listening on: "https://localhost:7271"
+02-05-2023 20:40:11 [Information] Now listening on: "http://localhost:5234"
+02-05-2023 20:40:11 [Information] Application started. Press Ctrl+C to shut down.
+02-05-2023 20:40:11 [Information] Hosting environment: "Development"
+02-05-2023 20:40:11 [Information] Content root path: "/home/matias/Documentos/MicroServicios/ServiciosDistribuidos/Productos/"

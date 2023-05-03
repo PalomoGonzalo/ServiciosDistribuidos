@@ -1,3 +1,4 @@
+using System.IO;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -12,6 +13,7 @@ using Productos.Models;
 using Productos.Repositorios;
 using Productos.Servicios;
 using Productos.Types;
+using Microsoft.Extensions.Configuration;
 
 namespace Productos.Controllers
 {
@@ -21,12 +23,13 @@ namespace Productos.Controllers
 
         private readonly IProductos _productos;
         private readonly ILogService _log;
-
-
-        public ProductoController(IProductos productos, ILogService log)
+        private readonly IConfiguration _config;
+        
+        public ProductoController(IProductos productos, ILogService log, IConfiguration config)
         {
             _productos = productos;
             _log = log;
+            _config = config;
         }
 
         [HttpGet("ObtenerProductosPorPaginacion/{nroDePagina}")]
@@ -41,7 +44,6 @@ namespace Productos.Controllers
                 Fecha = DateTime.Now,
             };
             
-
 
             try
             {
@@ -68,7 +70,8 @@ namespace Productos.Controllers
         {
             try
             {
-                string test = _productos.TestClaims(this.HttpContext);
+                string test = _config.GetSection("LoggingConf").GetValue<string>("outputPath").Trim();
+
                 return Ok(new HttpResponseOk{data = test});
             }
             catch (System.Exception ex)
@@ -76,6 +79,28 @@ namespace Productos.Controllers
                 return BadRequest(new HttpBadResponse(ex));
             }
         }
+
+        [HttpGet("DescargarLog/{archivo}")]
+        public ActionResult<FileStream> DescargarLog(string archivo)
+        {
+            try
+            {
+                string filePath = _config.GetSection("LoggingConf").GetValue<string>("outputPath").Trim() + archivo.ToString();
+                if(System.IO.File.Exists(filePath))
+                {
+                    return File(System.IO.File.ReadAllBytes(filePath),"text/plain",archivo);
+                }
+                else
+                {
+                    throw new Exception("No se encuentra el archivo");
+                }
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest(new HttpBadResponse(ex));
+            }
+        }
+
 
         [HttpGet("ObtenerProductoPorId/{id}")]
         public async Task<IActionResult> ObtenerProductoPorId(int id)
