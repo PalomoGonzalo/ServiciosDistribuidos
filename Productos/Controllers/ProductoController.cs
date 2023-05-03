@@ -21,12 +21,12 @@ namespace Productos.Controllers
 {
     [Route("[controller]")]
     public class ProductoController : Controller
-    {   
+    {
 
         private readonly IProductos _productos;
         private readonly ILogService _log;
         private readonly IConfiguration _config;
-        
+
         public ProductoController(IProductos productos, ILogService log, IConfiguration config)
         {
             _productos = productos;
@@ -45,19 +45,19 @@ namespace Productos.Controllers
                 Proceso = "productos",
                 Fecha = DateTime.Now,
             };
-            
+
             try
             {
                 IEnumerable<ProductosPaginacioDTO> listaProductos = await _productos.ObtenerTodosLosProductosPorPagina(nroDePagina);
 
-                if(listaProductos is null)
+                if (listaProductos is null)
                 {
                     return NotFound(new HttpBadResponse("No hay datos en esta pagina"));
                 }
 
-                _log.GrabarLog(Serilog.Events.LogEventLevel.Information,logger,null);
+                _log.GrabarLog(Serilog.Events.LogEventLevel.Information, logger, null);
 
-                return Ok(new HttpResponseOk{data = listaProductos});   
+                return Ok(new HttpResponseOk { data = listaProductos });
             }
             catch (System.Exception ex)
             {
@@ -69,17 +69,30 @@ namespace Productos.Controllers
         [HttpGet("TestItemClaims")]
         public IActionResult TestItemClaims()
         {
-            string myIp = string.Empty;
+            // si estan en la misma red utilizar este metodo
+            /* string myIp = string.Empty;
 
-            foreach (System.Net.IPAddress ip in Dns.GetHostAddresses(Dns.GetHostName()))
+             foreach (System.Net.IPAddress ip in Dns.GetHostAddresses(Dns.GetHostName()))
+             {
+                 if (ip.AddressFamily == AddressFamily.InterNetwork)
+                 {
+                     myIp = ip.ToString();
+                     break;
+                 }
+             }
+             return Ok(myIp);*/
+
+            // se obtiene la ip publica
+            try
             {
-                if (ip.AddressFamily == AddressFamily.InterNetwork)
-                {
-                    myIp = ip.ToString();
-                    break;
-                }
+                string userIP = HttpContext.Connection.RemoteIpAddress.ToString();
+                userIP = userIP.Replace("::ffff:", "");
+                return Ok(userIP);
             }
-            return Ok(myIp);
+            catch (System.Exception)
+            {
+                throw new Exception("Error al obtener la ip del cliente");
+            }
         }
 
         [HttpGet("DescargarLog/{archivo}")]
@@ -88,9 +101,9 @@ namespace Productos.Controllers
             try
             {
                 string filePath = _config.GetSection("LoggingConf").GetValue<string>("outputPath").Trim() + archivo.ToString();
-                if(System.IO.File.Exists(filePath))
+                if (System.IO.File.Exists(filePath))
                 {
-                    return File(System.IO.File.ReadAllBytes(filePath),"text/plain",archivo);
+                    return File(System.IO.File.ReadAllBytes(filePath), "text/plain", archivo);
                 }
                 else
                 {
@@ -109,12 +122,12 @@ namespace Productos.Controllers
         {
             try
             {
-            
+
                 ProductoDTO producto = await _productos.ObtenerProductoPorId(id);
 
 
 
-                return Ok(new HttpResponseOk{data = producto});
+                return Ok(new HttpResponseOk { data = producto });
             }
             catch (System.Exception ex)
             {
@@ -129,7 +142,7 @@ namespace Productos.Controllers
             {
                 IEnumerable<ProductoDTO> listaProductos = await _productos.ObtenerProductosPorNombre(nombre);
 
-                return Ok(new HttpResponseOk{data = listaProductos});
+                return Ok(new HttpResponseOk { data = listaProductos });
             }
             catch (System.Exception ex)
             {
@@ -138,16 +151,16 @@ namespace Productos.Controllers
         }
 
         [HttpPost("DarDeBajaProductoLogico")]
-        public async Task<IActionResult> DarDeBajaProductoLogico([FromBody]ProductoEliminarIdDTO idProducto)
+        public async Task<IActionResult> DarDeBajaProductoLogico([FromBody] ProductoEliminarIdDTO idProducto)
         {
             try
             {
                 ProductoEliminarDTO productoEliminado = await _productos.DarDeBajaProductoLogico(idProducto.Id_producto);
-                return Ok(new HttpResponseOk{data = productoEliminado,msg = "Se dio de baja correctamente"});
+                return Ok(new HttpResponseOk { data = productoEliminado, msg = "Se dio de baja correctamente" });
             }
             catch (System.Exception ex)
             {
-                
+
                 return BadRequest(new HttpBadResponse(ex));
             }
         }
