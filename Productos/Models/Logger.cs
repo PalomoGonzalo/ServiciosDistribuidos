@@ -10,7 +10,8 @@ namespace Productos.Models
         public Int32 IdServicio { get; set; }
         public String Servicio { get; set; }
         public String Usuario { get; set; }
-        public String IP { get; set; }
+        public String Legajo { get; set; }
+        public String Ip { get; set; }
         public String Proceso { get; set; }
         public DateTime Fecha { get; set; }
         public TimeSpan Duracion { get; set; }

@@ -24,6 +24,8 @@ namespace Productos.Servicios
         }
 
         public void GrabarLog(LogEventLevel Level,Logger Logger,Exception Exception){
+
+            
             
             Logger.IdServicio= IdLog;
             Logger.Duracion = DateTime.Now - Logger.Fecha;

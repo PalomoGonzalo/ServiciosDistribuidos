@@ -11,6 +11,7 @@ using Productos.Repositorios;
 using Serilog;
 using Serilog.Events;
 using Productos.Servicios;
+using Productos.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -114,6 +115,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddScoped<IProductos,Producto>();
 builder.Services.AddScoped<ILogService,LoggService>();
+builder.Services.AddScoped<ICLiente,ClienteRepositorio>();
 
 
 

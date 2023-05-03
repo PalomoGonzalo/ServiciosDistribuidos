@@ -16,6 +16,7 @@ using Productos.Repositorios;
 using Productos.Servicios;
 using Productos.Types;
 using Microsoft.Extensions.Configuration;
+using Productos.Helpers;
 
 namespace Productos.Controllers
 {
@@ -26,18 +27,21 @@ namespace Productos.Controllers
         private readonly IProductos _productos;
         private readonly ILogService _log;
         private readonly IConfiguration _config;
+        private readonly ICLiente _cliente;
 
-        public ProductoController(IProductos productos, ILogService log, IConfiguration config)
+        public ProductoController(IProductos productos, ILogService log, IConfiguration config, ICLiente cliente)
         {
             _productos = productos;
             _log = log;
             _config = config;
+            _cliente = cliente;
         }
 
         [HttpGet("ObtenerProductosPorPaginacion/{nroDePagina}")]
         public async Task<IActionResult> ObtenerProductosPorPaginacion(int nroDePagina)
         {
-            Logger logger = new Logger()
+            /*
+                    Logger logger = new Logger()
             {
                 Servicio = "ObtenerProductosPorPaginacion",
                 Usuario = User.FindFirst("USUARIO").Value,
@@ -46,8 +50,10 @@ namespace Productos.Controllers
                 Fecha = DateTime.Now,
             };
 
+            */
             try
             {
+                Logger logger = _cliente.ObtenerClaimsLogger(this.HttpContext,"ObtenerProductosPorPaginacion","Productos");
                 IEnumerable<ProductosPaginacioDTO> listaProductos = await _productos.ObtenerTodosLosProductosPorPagina(nroDePagina);
 
                 if (listaProductos is null)
@@ -122,11 +128,7 @@ namespace Productos.Controllers
         {
             try
             {
-
                 ProductoDTO producto = await _productos.ObtenerProductoPorId(id);
-
-
-
                 return Ok(new HttpResponseOk { data = producto });
             }
             catch (System.Exception ex)
@@ -160,7 +162,6 @@ namespace Productos.Controllers
             }
             catch (System.Exception ex)
             {
-
                 return BadRequest(new HttpBadResponse(ex));
             }
         }

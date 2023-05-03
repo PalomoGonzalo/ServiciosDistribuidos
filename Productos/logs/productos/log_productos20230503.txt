@@ -12,3 +12,16 @@
 03-05-2023 10:23:30 [Information] Hosting environment: "Development"
 03-05-2023 10:23:30 [Information] Content root path: "C:\Users\153131\Desktop\ServiciosDistribuidos\ServiciosDistribuidos\Productos\"
 03-05-2023 10:24:54 [Information] Application is shutting down...
+03-05-2023 16:25:08 [Information] Se inicio el servicio rest Productos Backend
+03-05-2023 16:25:09 [Information] Now listening on: "https://localhost:7271"
+03-05-2023 16:25:09 [Information] Now listening on: "http://localhost:5234"
+03-05-2023 16:25:09 [Information] Application started. Press Ctrl+C to shut down.
+03-05-2023 16:25:09 [Information] Hosting environment: "Development"
+03-05-2023 16:25:09 [Information] Content root path: "C:\Users\153131\Desktop\ServiciosDistribuidos\ServiciosDistribuidos\Productos\"
+03-05-2023 16:25:23 [Information] Application is shutting down...
+03-05-2023 16:25:40 [Information] Se inicio el servicio rest Productos Backend
+03-05-2023 16:25:40 [Information] Now listening on: "https://localhost:7271"
+03-05-2023 16:25:40 [Information] Now listening on: "http://localhost:5234"
+03-05-2023 16:25:40 [Information] Application started. Press Ctrl+C to shut down.
+03-05-2023 16:25:40 [Information] Hosting environment: "Development"
+03-05-2023 16:25:40 [Information] Content root path: "C:\Users\153131\Desktop\ServiciosDistribuidos\ServiciosDistribuidos\Productos\"

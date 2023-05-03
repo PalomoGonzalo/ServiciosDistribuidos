@@ -7,6 +7,7 @@ using Dapper;
 using Microsoft.IdentityModel.Tokens;
 using MySql.Data.MySqlClient;
 using UserManager.DTO;
+using UserManager.Helpers;
 
 namespace UserManager.Repositorios
 {
@@ -26,13 +27,17 @@ namespace UserManager.Repositorios
         private readonly IConfiguration _config;
         private readonly IPasswordHasherRepositorio _passwordHash;
         private readonly IEventos _evento;
-        
+        private readonly ICliente _cliente;
+        private readonly IHttpContextAccessor http;
 
-        public Login(IConfiguration config, IPasswordHasherRepositorio passwordHash, IEventos evento)
+
+        public Login(IConfiguration config, IPasswordHasherRepositorio passwordHash, IEventos evento, ICliente cliente, IHttpContextAccessor http)
         {
             _config = config;
             _passwordHash = passwordHash;
             _evento = evento;
+            _cliente = cliente;
+            this.http = http;
         }
 
         /// <summary>
@@ -68,7 +73,7 @@ namespace UserManager.Repositorios
 
             SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] { new Claim("USUARIO", user.Usuario), new Claim("LEGAJO", user.Password) }),
+                Subject = new ClaimsIdentity(new[] { new Claim("USUARIO", user.Usuario), new Claim("LEGAJO", user.Legajo.ToString()),new Claim("IP",_cliente.ObtenerIpCliente(http)) }),
                 Expires = DateTime.UtcNow.AddHours(24),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Authentication:SecretKey"])), SecurityAlgorithms.HmacSha256)
             };
