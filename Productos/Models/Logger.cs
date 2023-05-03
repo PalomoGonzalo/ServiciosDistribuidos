@@ -12,9 +12,6 @@ namespace Productos.Models
         public String Usuario { get; set; }
         public String IP { get; set; }
         public String Proceso { get; set; }
-        public String Pedido { get; set; }
-        public String Serie { get; set; }
-        public String Plu { get; set; }
         public DateTime Fecha { get; set; }
         public TimeSpan Duracion { get; set; }
         public String Estado { get; set; }

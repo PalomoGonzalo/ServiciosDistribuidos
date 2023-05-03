@@ -1,0 +1,7 @@
+03-05-2023 09:57:25 [Information] Se inicio el servicio rest Productos Backend
+03-05-2023 09:57:26 [Information] Now listening on: "https://localhost:7271"
+03-05-2023 09:57:26 [Information] Now listening on: "http://localhost:5234"
+03-05-2023 09:57:26 [Information] Application started. Press Ctrl+C to shut down.
+03-05-2023 09:57:26 [Information] Hosting environment: "Development"
+03-05-2023 09:57:26 [Information] Content root path: "C:\Users\153131\Desktop\ServiciosDistribuidos\ServiciosDistribuidos\Productos\"
+03-05-2023 09:58:12 [Information] Application is shutting down...

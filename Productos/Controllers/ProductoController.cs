@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.AspNetCore.Mvc;
@@ -44,7 +46,6 @@ namespace Productos.Controllers
                 Fecha = DateTime.Now,
             };
             
-
             try
             {
                 IEnumerable<ProductosPaginacioDTO> listaProductos = await _productos.ObtenerTodosLosProductosPorPagina(nroDePagina);
@@ -68,16 +69,17 @@ namespace Productos.Controllers
         [HttpGet("TestItemClaims")]
         public IActionResult TestItemClaims()
         {
-            try
-            {
-                string test = _config.GetSection("LoggingConf").GetValue<string>("outputPath").Trim();
+            string myIp = string.Empty;
 
-                return Ok(new HttpResponseOk{data = test});
-            }
-            catch (System.Exception ex)
+            foreach (System.Net.IPAddress ip in Dns.GetHostAddresses(Dns.GetHostName()))
             {
-                return BadRequest(new HttpBadResponse(ex));
+                if (ip.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    myIp = ip.ToString();
+                    break;
+                }
             }
+            return Ok(myIp);
         }
 
         [HttpGet("DescargarLog/{archivo}")]

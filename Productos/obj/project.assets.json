@@ -2245,24 +2245,26 @@
     ]
   },
   "packageFolders": {
-    "/home/matias/.nuget/packages/": {}
+    "C:\\Users\\153131\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "/home/matias/Documentos/MicroServicios/ServiciosDistribuidos/Productos/Productos.csproj",
+      "projectUniqueName": "C:\\Users\\153131\\Desktop\\ServiciosDistribuidos\\ServiciosDistribuidos\\Productos\\Productos.csproj",
       "projectName": "Productos",
-      "projectPath": "/home/matias/Documentos/MicroServicios/ServiciosDistribuidos/Productos/Productos.csproj",
-      "packagesPath": "/home/matias/.nuget/packages/",
-      "outputPath": "/home/matias/Documentos/MicroServicios/ServiciosDistribuidos/Productos/obj/",
+      "projectPath": "C:\\Users\\153131\\Desktop\\ServiciosDistribuidos\\ServiciosDistribuidos\\Productos\\Productos.csproj",
+      "packagesPath": "C:\\Users\\153131\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\153131\\Desktop\\ServiciosDistribuidos\\ServiciosDistribuidos\\Productos\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "/home/matias/.nuget/NuGet/NuGet.Config"
+        "C:\\Users\\153131\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net6.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -2360,7 +2362,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/6.0.116/RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.301\\RuntimeIdentifierGraph.json"
       }
     }
   }
