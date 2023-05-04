@@ -102,24 +102,29 @@ namespace Productos.Controllers
         }
 
         [HttpGet("DescargarLog/{archivo}")]
-        public ActionResult<FileStream> DescargarLog(string archivo)
+        public async Task<IActionResult> DescargarLog(string archivo)
         {
-            try
-            {
-                string filePath = _config.GetSection("LoggingConf").GetValue<string>("outputPath").Trim() + archivo.ToString();
-                if (System.IO.File.Exists(filePath))
-                {
-                    return File(System.IO.File.ReadAllBytes(filePath), "text/plain", archivo);
-                }
-                else
-                {
-                    throw new Exception("No se encuentra el archivo");
-                }
-            }
-            catch (System.Exception ex)
-            {
-                return BadRequest(new HttpBadResponse(ex));
-            }
+
+         String path = "";
+        
+        if (archivo == null)
+            return Content($"no existe el fichero {archivo}");
+
+        path = _config.GetSection("LoggingConf").GetValue<string>("outputPath").Trim() + archivo.ToString();
+
+        if (!System.IO.File.Exists(path))
+        {
+            return BadRequest($"No se existe el documento {archivo}");
+        }
+
+        MemoryStream memory = new MemoryStream();
+        using (FileStream stream = new FileStream(path, FileMode.Open))
+        {
+            await stream.CopyToAsync(memory);
+        }
+        memory.Position = 0;
+
+        return File(memory, "text/plain", Path.GetFileName(path));;
         }
 
 
