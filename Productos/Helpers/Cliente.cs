@@ -19,20 +19,24 @@ namespace Productos.Helpers
         {
             Logger userClaims = new Logger();
 
-            try
-            {
+           
                 userClaims.Ip = httpContext.User.FindFirst("IP").Value;
                 userClaims.Usuario = httpContext.User.FindFirst("USUARIO").Value;
                 userClaims.Legajo = httpContext.User.FindFirst("LEGAJO").Value;
                 userClaims.Servicio = servicio;
                 userClaims.Proceso = proceso;
+                userClaims.Fecha = DateTime.Now;
+                if (userClaims is null)
+                {
+                    throw new Exception("Error en obtener los claims");
+                }
+                
 
                 return userClaims;
-            }
-            catch (System.Exception)
-            {
-                throw new Exception("Error en obtener los claims");
-            }
+            
+           
+                
+            
         }
     }
 }

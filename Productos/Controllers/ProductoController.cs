@@ -17,6 +17,7 @@ using Productos.Servicios;
 using Productos.Types;
 using Microsoft.Extensions.Configuration;
 using Productos.Helpers;
+using Serilog;
 
 namespace Productos.Controllers
 {
@@ -51,9 +52,11 @@ namespace Productos.Controllers
             };
 
             */
+            Logger logger = new Logger();
+             
             try
             {
-                Logger logger = _cliente.ObtenerClaimsLogger(this.HttpContext,"ObtenerProductosPorPaginacion","Productos");
+                 logger = _cliente.ObtenerClaimsLogger(this.HttpContext, "ObtenerProductosPorPaginacion", "Productos");
                 IEnumerable<ProductosPaginacioDTO> listaProductos = await _productos.ObtenerTodosLosProductosPorPagina(nroDePagina);
 
                 if (listaProductos is null)
@@ -67,6 +70,7 @@ namespace Productos.Controllers
             }
             catch (System.Exception ex)
             {
+                _log.GrabarLog(Serilog.Events.LogEventLevel.Error,logger,ex);
                 return BadRequest(new HttpBadResponse(ex));
             }
         }
@@ -105,26 +109,29 @@ namespace Productos.Controllers
         public async Task<IActionResult> DescargarLog(string archivo)
         {
 
-         String path = "";
         
-        if (archivo == null)
-            return Content($"no existe el fichero {archivo}");
+            
+            String path = "";
 
-        path = _config.GetSection("LoggingConf").GetValue<string>("outputPath").Trim() + archivo.ToString();
+            if (archivo == null)
+                return Content($"no existe el fichero {archivo}");
 
-        if (!System.IO.File.Exists(path))
-        {
-            return BadRequest($"No se existe el documento {archivo}");
-        }
+            path = _config.GetSection("LoggingConf").GetValue<string>("outputPath").Trim() + archivo.ToString();
 
-        MemoryStream memory = new MemoryStream();
-        using (FileStream stream = new FileStream(path, FileMode.Open))
-        {
-            await stream.CopyToAsync(memory);
-        }
-        memory.Position = 0;
+            if (!System.IO.File.Exists(path))
+            {
+                return BadRequest($"No se existe el documento {archivo}");
+            }
 
-        return File(memory, "text/plain", Path.GetFileName(path));;
+            MemoryStream memory = new MemoryStream();
+            using (FileStream stream = new FileStream(path, FileMode.Open,FileAccess.Read,FileShare.ReadWrite))
+            {
+                
+                await stream.CopyToAsync(memory);
+            }
+            memory.Position = 0;
+
+            return File(memory, "text/plain", Path.GetFileName(path));
         }
 
 

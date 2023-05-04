@@ -11,33 +11,36 @@ namespace Productos.Servicios
 {
     public interface ILogService
     {
-        void GrabarLog(LogEventLevel Level,Logger Mensaje,Exception Exception);
+        void GrabarLog(LogEventLevel Level, Logger Mensaje, Exception Exception);
     }
 
     public class LoggService : ILogService
     {
-        private static Int32 IdLog=1;
+        private static Int32 IdLog = 1;
 
         public LoggService()
         {
 
+
         }
 
-        public void GrabarLog(LogEventLevel Level,Logger Logger,Exception Exception){
+        public void GrabarLog(LogEventLevel Level, Logger Logger, Exception Exception)
+        {
+            
 
-            
-            
-            Logger.IdServicio= IdLog;
+            Logger.IdServicio = IdLog;
             Logger.Duracion = DateTime.Now - Logger.Fecha;
 
-            if(Level==LogEventLevel.Error){
+            if (Level == LogEventLevel.Error)
+            {
                 Logger.Estado = "nok";
-                Log.Write(Level,JsonConvert.SerializeObject(Logger) +" || "+ Exception);
+                Log.Write(Level, JsonConvert.SerializeObject(Logger) + " || " + Exception);
                 IdLog++;
             }
-            else{
+            else
+            {
                 Logger.Estado = "ok";
-                Log.Write(Level,JsonConvert.SerializeObject(Logger));
+                Log.Write(Level, JsonConvert.SerializeObject(Logger));
                 IdLog++;
             }
         }
