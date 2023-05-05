@@ -48,7 +48,7 @@ Para descargar los logs tienen que tener el siguiente formato, log_productosxxxx
 ![image](https://user-images.githubusercontent.com/89616271/236545369-2b0714be-4520-400b-9ece-e5c92ac05c07.png)
 
 Los logs se escriben con el siguiente formato 
-05-05-2023 15:55:14 [Information] {"IdServicio":4,"Servicio":"ObtenerProductosPorPaginacion","Usuario":"string","Legajo":"13","Ip":"190.220.133.170","Proceso":"Productos","Fecha":"2023-05-05T15:55:13.730605-03:00","Duracion":"00:00:00.6205778","Estado":"ok"
+05-05-2023 15:55:14 [Information] {"IdServicio":4,"Servicio":"ObtenerProductosPorPaginacion","Usuario":"string","Legajo":"13","Ip":"190.224.05.130","Proceso":"Productos","Fecha":"2023-05-05T15:55:13.730605-03:00","Duracion":"00:00:00.6205778","Estado":"ok"
 
 
 
