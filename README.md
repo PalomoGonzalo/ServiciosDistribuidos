@@ -20,11 +20,16 @@ Y en authorize escribir Bearer + token
 ![image](https://user-images.githubusercontent.com/89616271/225305091-fd5d73ab-311b-4441-a8e0-4aa9c3c12142.png)
 
 Los endpoints son cruds, con baja logica, contaseñas hassheadas, cada accion que se realiza se guarda eventos, como cambiar contraseña, registrar usuario, eliminar usuario obteniendo la ip de quien lo realizo
-El endpoint de eventos, al buscar por id se obtiene los eventos, 1 = los eventos de registrar usuarios
+El endpoint de eventos, al buscar por id se obtiene los eventos.
+
+1 = los eventos de registrar usuarios
+2 = los eventos de baja de usuarios
+3 = cambiar contraseña de usuario 
 
 ![image](https://user-images.githubusercontent.com/89616271/236542959-373860f5-d7e4-4b54-8776-7f6b9703ccb1.png)
 
-![image](https://user-images.githubusercontent.com/89616271/236543062-8a5c7586-6c23-46a1-97cd-7e9df376c08b.png)
+![image](https://user-images.githubusercontent.com/89616271/236547028-cabd73dc-7dbf-4e41-90ca-7444fff128c2.png)
+
 
 
 En control de stock de productos, se tiene que que poner en el authorize el jwt que se obtenio del user manager.
