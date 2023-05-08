@@ -10,33 +10,40 @@ namespace Productos.Helpers
 {
     public interface ICLiente
     {
-        public Logger ObtenerClaimsLogger(HttpContext httpContext,string servicio,string proceso);
+        public Logger ObtenerClaimsLogger(HttpContext httpContext, string servicio, string proceso);
     }
     public class ClienteRepositorio : ICLiente
     {
 
-        public Logger ObtenerClaimsLogger(HttpContext httpContext,string servicio,string proceso)
+        public Logger ObtenerClaimsLogger(HttpContext httpContext, string servicio, string proceso)
         {
             Logger userClaims = new Logger();
+            
 
-           
+            try
+            {
                 userClaims.Ip = httpContext.User.FindFirst("IP").Value;
                 userClaims.Usuario = httpContext.User.FindFirst("USUARIO").Value;
                 userClaims.Legajo = httpContext.User.FindFirst("LEGAJO").Value;
                 userClaims.Servicio = servicio;
                 userClaims.Proceso = proceso;
                 userClaims.Fecha = DateTime.Now;
-                if (userClaims is null)
-                {
-                    throw new Exception("Error en obtener los claims");
-                }
-                
+            }
+            catch (System.Exception)
+            {
+                throw new Exception("Error en obtener los claims");
+            }
 
-                return userClaims;
-            
-           
-                
-            
+            if (userClaims is null)
+            {
+                throw new Exception("Claims is null");
+            }
+
+            return userClaims;
+
+
+
+
         }
     }
 }

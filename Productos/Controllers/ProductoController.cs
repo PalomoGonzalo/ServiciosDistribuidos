@@ -18,6 +18,7 @@ using Productos.Types;
 using Microsoft.Extensions.Configuration;
 using Productos.Helpers;
 using Serilog;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Productos.Controllers
 {
@@ -37,7 +38,7 @@ namespace Productos.Controllers
             _config = config;
             _cliente = cliente;
         }
-
+        [Authorize]
         [HttpGet("ObtenerProductosPorPaginacion/{nroDePagina}")]
         public async Task<IActionResult> ObtenerProductosPorPaginacion(int nroDePagina)
         {
@@ -70,6 +71,7 @@ namespace Productos.Controllers
             }
             catch (System.Exception ex)
             {
+                logger.Fecha = DateTime.Now;
                 _log.GrabarLog(Serilog.Events.LogEventLevel.Error,logger,ex);
                 return BadRequest(new HttpBadResponse(ex));
             }
@@ -105,12 +107,10 @@ namespace Productos.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet("DescargarLog/{archivo}")]
         public async Task<IActionResult> DescargarLog(string archivo)
         {
-
-        
-            
             String path = "";
 
             if (archivo == null)
@@ -126,15 +126,13 @@ namespace Productos.Controllers
             MemoryStream memory = new MemoryStream();
             using (FileStream stream = new FileStream(path, FileMode.Open,FileAccess.Read,FileShare.ReadWrite))
             {
-                
                 await stream.CopyToAsync(memory);
             }
             memory.Position = 0;
-
             return File(memory, "text/plain", Path.GetFileName(path));
         }
 
-
+        
         [HttpGet("ObtenerProductoPorId/{id}")]
         public async Task<IActionResult> ObtenerProductoPorId(int id)
         {
@@ -149,6 +147,8 @@ namespace Productos.Controllers
             }
 
         }
+
+        [Authorize]
         [HttpGet("ObtenerProductosPorNombre/{nombre}")]
         public async Task<IActionResult> ObtenerProductosPorNombre(string nombre)
         {
@@ -164,6 +164,7 @@ namespace Productos.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost("DarDeBajaProductoLogico")]
         public async Task<IActionResult> DarDeBajaProductoLogico([FromBody] ProductoEliminarIdDTO idProducto)
         {

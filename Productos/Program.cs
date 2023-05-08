@@ -31,7 +31,8 @@ Log.Logger = new LoggerConfiguration()
                                     outputTemplate: "{Timestamp:dd-MM-yyyy HH:mm:ss} [{Level}] {Message}{NewLine}{Exception}",
                                     rollOnFileSizeLimit: true,
                                     retainedFileCountLimit: 5,
-                                    shared:true,
+                                    shared:true, 
+
                                     rollingInterval: RollingInterval.Day)
                    .CreateLogger();
 

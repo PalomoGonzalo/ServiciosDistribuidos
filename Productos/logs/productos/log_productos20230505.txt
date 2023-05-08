@@ -1,0 +1,15 @@
+05-05-2023 16:22:32 [Information] Se inicio el servicio rest Productos Backend
+05-05-2023 16:22:34 [Information] Now listening on: "https://localhost:7271"
+05-05-2023 16:22:34 [Information] Now listening on: "http://localhost:5234"
+05-05-2023 16:22:34 [Information] Application started. Press Ctrl+C to shut down.
+05-05-2023 16:22:34 [Information] Hosting environment: "Development"
+05-05-2023 16:22:34 [Information] Content root path: "C:\Users\153131\Desktop\ServiciosDistribuidos\ServiciosDistribuidos\Productos\"
+05-05-2023 16:23:34 [Information] Se inicio el servicio rest Productos Backend
+05-05-2023 16:23:35 [Information] Now listening on: "https://localhost:7271"
+05-05-2023 16:23:35 [Information] Now listening on: "http://localhost:5234"
+05-05-2023 16:23:35 [Information] Application started. Press Ctrl+C to shut down.
+05-05-2023 16:23:35 [Information] Hosting environment: "Development"
+05-05-2023 16:23:35 [Information] Content root path: "C:\Users\153131\Desktop\ServiciosDistribuidos\ServiciosDistribuidos\Productos\"
+05-05-2023 16:24:25 [Error] {"IdServicio":1,"Servicio":null,"Usuario":null,"Legajo":null,"Ip":null,"Proceso":null,"Fecha":"0001-01-01T00:00:00","Duracion":"738644.16:24:16.3710434","Estado":"nok"} || System.Exception: Error en obtener los claims
+   at Productos.Helpers.ClienteRepositorio.ObtenerClaimsLogger(HttpContext httpContext, String servicio, String proceso) in C:\Users\153131\Desktop\ServiciosDistribuidos\ServiciosDistribuidos\Productos\Helpers\Cliente.cs:line 35
+   at Productos.Controllers.ProductoController.ObtenerProductosPorPaginacion(Int32 nroDePagina) in C:\Users\153131\Desktop\ServiciosDistribuidos\ServiciosDistribuidos\Productos\Controllers\ProductoController.cs:line 59
