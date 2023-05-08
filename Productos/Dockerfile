@@ -12,7 +12,7 @@ RUN dotnet publish -c Release -o out
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 as runtime
 ENV TZ=America/Buenos_Aires
-ENV ASPNETCORE_ENVIRONMENT Development
+ENV ASPNETCORE_ENVIRONMENT Production
 
 WORKDIR /app
 COPY --from=build-env /app/out .
