@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Dynamic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Threading.Tasks;
 using Dapper;
 using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
+using System.Data;
+using System.Dynamic;
+using System.IdentityModel.Tokens.Jwt;
 using UserManager.DTO;
 using UserManager.Helpers;
 
@@ -16,7 +12,7 @@ namespace UserManager.Repositorios
 
     public interface IEventos
     {
-        Task<int> InsertarEvento(object user, IDbConnection db,string eventoNombre,int idEvento);
+        Task<int> InsertarEvento(object user, IDbConnection db, string eventoNombre, int idEvento);
         public Task<IEnumerable<EventoDTO>> ObtenerEventosPorIdEvento(int idEvento);
     }
     public class Eventos : IEventos
@@ -42,9 +38,9 @@ namespace UserManager.Repositorios
         /// <param name="usuarioQuienRealiza"></param>
         /// <param name="db"></param>
         /// <returns></returns>
-        public async Task<int> InsertarEvento(object user,IDbConnection db, string eventoNombre,int idEvento)
+        public async Task<int> InsertarEvento(object user, IDbConnection db, string eventoNombre, int idEvento)
         {
-            
+
             string usuarioObject = JsonConvert.SerializeObject(user);
 
             string userIP = _cliente.ObtenerIpCliente(http);
@@ -61,11 +57,11 @@ namespace UserManager.Repositorios
             dp.Add("eventonombre", eventoNombre, DbType.String);
             dp.Add("usuario", usuarioQuienRealiza, DbType.String);
             dp.Add("dato", usuarioObject, DbType.String);
-            dp.Add("fecha",dateTimeStamp,DbType.String);
-            dp.Add("ip",userIP,DbType.String);
+            dp.Add("fecha", dateTimeStamp, DbType.String);
+            dp.Add("ip", userIP, DbType.String);
 
             int row = await db.ExecuteAsync(sql, dp);
-            
+
             return row;
         }
 
@@ -93,22 +89,27 @@ namespace UserManager.Repositorios
 
             foreach (var item in eventos)
             {
-                if(item.Dato != null)
+                if (item.Dato != null)
                     item.DatoUsuario = JsonConvert.DeserializeObject<ExpandoObject>(item.Dato);
             }
-            
+
             return eventos;
         }
 
-                /// <summary>
+        /// <summary>
         /// Se obtiene el header para tener registro de que usuario esta haciendo la peticion 
         /// </summary>
         /// <param name="http"></param>
         /// <returns></returns>
         public string GetHeadersLegajo(IHttpContextAccessor http)
         {
-           
+
+
             string test = http.HttpContext.Request.Headers.Authorization;
+            if (test == null)
+            {
+                return "Sin authorization";
+            }
             string[] strlist = test.Split("Bearer ", StringSplitOptions.RemoveEmptyEntries);
             test = String.Join("", strlist);
 

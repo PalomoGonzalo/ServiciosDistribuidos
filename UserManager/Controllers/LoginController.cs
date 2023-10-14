@@ -1,14 +1,9 @@
-using System.Reflection;
-using System.Net.Http.Headers;
-using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
 using UserManager.DTO;
 using UserManager.Repositorios;
 using UserManager.Types;
-using Microsoft.AspNetCore.Authorization;
-using System.Globalization;
-using System;
 
 namespace UserManager.Controllers
 {
@@ -58,7 +53,6 @@ namespace UserManager.Controllers
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        [Authorize]
         [HttpPost("RegistrarUsuario")]
         public async Task<IActionResult> RegistrarUsuario([FromBody] CrearUsuarioDTO user)
         {
@@ -82,9 +76,9 @@ namespace UserManager.Controllers
         [HttpGet("Headers")]
         public IActionResult GetAllHeaders()
         {
-           
+
             var date = DateTime.Now;
-            
+
             return Ok(date);
         }
         /// <summary>
@@ -109,7 +103,7 @@ namespace UserManager.Controllers
                 Password = legajo
             };
 
-            return Ok (user);
+            return Ok(user);
 
         }
         /// <summary>
@@ -138,7 +132,7 @@ namespace UserManager.Controllers
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        
+
         [HttpPut("CambiarContraseñaForzada")]
         [Authorize]
         public async Task<IActionResult> CambiarContraseñaForzada([FromBody] CambiarContraseñaForzadaDTO user)
